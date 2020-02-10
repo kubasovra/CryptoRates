@@ -12,7 +12,6 @@ using CryptoRates.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using CryptoRates.Models;
 
 namespace CryptoRates
 {
@@ -30,7 +29,7 @@ namespace CryptoRates
         {
             services.AddDbContext<CryptoContext>(options => options.UseSqlite("Data Source=cryptoDB.db"));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<CryptoContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
 

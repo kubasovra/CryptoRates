@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CryptoRates.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class CryptoContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public CryptoContext(DbContextOptions<CryptoContext> options)
             : base(options)
         {
         }
