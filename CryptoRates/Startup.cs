@@ -38,6 +38,7 @@ namespace CryptoRates
                 {
                     IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
 
+                    options.CallbackPath = "/Home/Index";
                     options.ClientId = googleAuthNSection["ClientId"];
                     options.ClientSecret = googleAuthNSection["ClientSecret"];
                 });
