@@ -15,6 +15,8 @@ namespace CryptoRates.Data.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles");
 
+            
+
             migrationBuilder.AlterColumn<string>(
                 name: "Value",
                 table: "AspNetUserTokens",

@@ -19,6 +19,8 @@ namespace CryptoRates.Controllers
         {
             _context = context;
         }
+
+        //Temporary, later this functional will be moved to Hangfire
         [HttpGet]
         public async Task<IActionResult> All()
         {
@@ -37,9 +39,9 @@ namespace CryptoRates.Controllers
                     WebPage = pair.Value.Url,
                     ImageURL = pair.Value.ImageUrl
                 };
-                _context.Currencies.Add(currency);
+                //_context.Currencies.Add(currency);
             }
-            _context.SaveChanges();
+            //_context.SaveChanges();
             return View();
         }
     }
