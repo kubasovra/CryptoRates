@@ -27,7 +27,7 @@ namespace CryptoRates
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CryptoContext>(options => options.UseSqlite("Data Source=cryptoDB.db"));
+            services.AddDbContext<CryptoContext>(options => options.UseSqlite(Configuration.GetConnectionString("SQLite")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<CryptoContext>();
             services.AddControllersWithViews();

@@ -11,6 +11,9 @@ namespace CryptoRates.Data
         public CryptoContext(DbContextOptions<CryptoContext> options)
             : base(options)
         {
+            //this.Database.Migrate();
         }
+
+        public DbSet<Currency> Currencies { get; set; }
     }
 }
