@@ -10,6 +10,8 @@ namespace CryptoRates.DeserializingJSON
         public string Response { get; set; }
         public string Message { get; set; }
         public Dictionary<string, Coin> Data { get; set; }
+        public string BaseImageUrl { get; set; }
+        public string BaseLinkUrl { get; set; }
     }
 
     public class Coin

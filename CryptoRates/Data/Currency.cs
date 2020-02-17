@@ -15,10 +15,10 @@ namespace CryptoRates.Data
         public string Name { get; set; }
 
         [Required]
-        public string AlphaCode { get; set; }
+        public string Symbol { get; set; }
 
         [Required]
-        public double Value_USD { get; set; }
+        public double ValueUSD { get; set; }
 
         [Url]
         public string WebPage { get; set; }

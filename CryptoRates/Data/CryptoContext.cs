@@ -8,12 +8,10 @@ namespace CryptoRates.Data
 {
     public class CryptoContext : IdentityDbContext
     {
-        //To do:
-        //Replace AlterColumns with AddColumns (try to force EF to do it automatically) and then manually delete old columns
         public CryptoContext(DbContextOptions<CryptoContext> options)
             : base(options)
         {
-            //this.Database.Migrate();
+            this.Database.EnsureCreated();
         }
 
         public DbSet<Currency> Currencies { get; set; }
