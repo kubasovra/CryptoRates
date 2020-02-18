@@ -84,7 +84,7 @@ namespace CryptoRates
 
             recurringJob.AddOrUpdate<HangfireJobs>(
                 "GetAllCoins",
-                x => x.GetAllCoins(), 
+                x => x.GetAllCoins(),
                 Cron.Daily());
 
             app.UseRouting();

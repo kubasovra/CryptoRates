@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CryptoRates.Migrations
 {
     [DbContext(typeof(CryptoContext))]
-    [Migration("20200217123637_InitialMigration")]
+    [Migration("20200218114033_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,54 @@ namespace CryptoRates.Migrations
                     b.HasKey("CurrencyId");
 
                     b.ToTable("Currencies");
+                });
+
+            modelBuilder.Entity("CryptoRates.Data.Pair", b =>
+                {
+                    b.Property<int>("PairId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("FirstCurrencyCurrencyId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsNotifyOnAbsolute")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsNotifyOnPercent")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsNotifyOnPrice")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("PriceFirstToSecond")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("SecondCurrencyCurrencyId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TargetPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TargetPriceChangeAbsolute")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TargetPriceChangePercent")
+                        .HasColumnType("float");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PairId");
+
+                    b.HasIndex("FirstCurrencyCurrencyId");
+
+                    b.HasIndex("SecondCurrencyCurrencyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Pairs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -248,6 +296,21 @@ namespace CryptoRates.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("CryptoRates.Data.Pair", b =>
+                {
+                    b.HasOne("CryptoRates.Data.Currency", "FirstCurrency")
+                        .WithMany()
+                        .HasForeignKey("FirstCurrencyCurrencyId");
+
+                    b.HasOne("CryptoRates.Data.Currency", "SecondCurrency")
+                        .WithMany()
+                        .HasForeignKey("SecondCurrencyCurrencyId");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

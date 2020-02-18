@@ -8,6 +8,16 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200217122843_InitialMigration.cs" />
     <Compile Remove="Migrations\20200217122843_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200217123637_InitialMigration.cs" />
+    <Compile Remove="Migrations\20200217123637_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200218092316_UpdateCurrency.cs" />
+    <Compile Remove="Migrations\20200218092316_UpdateCurrency.Designer.cs" />
+    <Compile Remove="Migrations\20200218092609_InitialMigration.cs" />
+    <Compile Remove="Migrations\20200218092609_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200218093128_InitialMigration.cs" />
+    <Compile Remove="Migrations\20200218093128_InitialMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200218113825_PairAdded.cs" />
+    <Compile Remove="Migrations\20200218113825_PairAdded.Designer.cs" />
   </ItemGroup>
 
 

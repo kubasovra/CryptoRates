@@ -15,5 +15,6 @@ namespace CryptoRates.Data
         }
 
         public DbSet<Currency> Currencies { get; set; }
+        public DbSet<Pair> Pairs { get; set; }
     }
 }

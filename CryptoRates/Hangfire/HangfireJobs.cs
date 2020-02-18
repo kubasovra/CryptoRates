@@ -27,15 +27,23 @@ namespace CryptoRates.Hangfire
             {
                 Currency currency = new Currency()
                 {
-                    Name = pair.Value.Name,
+                    Name = pair.Value.CoinName,
                     Symbol = pair.Value.Symbol,
                     ValueUSD = 0,
                     WebPage = allCurrencies.BaseLinkUrl + pair.Value.Url,
                     ImageURL = allCurrencies.BaseImageUrl + pair.Value.ImageUrl
                 };
-                _context.Currencies.Add(currency);
+                if (_context.Currencies.FirstOrDefault(c => c.Name == pair.Value.CoinName) == null)
+                {
+                    _context.Currencies.Add(currency);
+                }
             }
             _context.SaveChanges();
+        }
+
+        public async Task UpdatePairsValue()
+        {
+            
         }
     }
 }
