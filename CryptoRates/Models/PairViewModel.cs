@@ -7,6 +7,10 @@ namespace CryptoRates.Models
 {
     public class PairViewModel
     {
+        public PairViewModel(int pairId)
+        {
+            PairId = pairId;
+        }
         public int PairId { get; private set; }
         public string FirstCurrencyName { get; set; }
         public string FirstCurrencySymbol { get; set; }

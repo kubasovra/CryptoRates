@@ -38,9 +38,9 @@ namespace CryptoRates.DeserializingJSON
         public Taxonomy Taxonomy { get; set; }
         public Rating Rating { get; set; }
         public bool IsTrading { get; set; }
-        public decimal TotalCoinsMined { get; set; }
-        public decimal BlockNumber { get; set; }
-        public decimal NetHashesPerSecond { get; set; }
+        public double TotalCoinsMined { get; set; }
+        public double BlockNumber { get; set; }
+        public double NetHashesPerSecond { get; set; }
         public double BlockReward { get; set; }
         public double BlockTime { get; set; }
     }

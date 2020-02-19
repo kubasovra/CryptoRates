@@ -9,7 +9,7 @@
     <input type="text" class="input-group-sm" name="firstCoin" placeholder="First coin">
     <input type="text" class="input-group-sm" name="secondCoin" placeholder="Second coin">
     <input type="text" class="input-group-sm" name="targetPrice" placeholder="Target price">
-    <input type="submit" class="btn-sm btn btn-primary" />
+    <input type="submit" class="btn-sm btn btn-primary" value="Add"/>
 </form>
 
 <table class="table-bordered">
@@ -22,7 +22,15 @@
         <td><image width="20" height="20" src="@pair.SecondCurrencyImageURL" /></td>
         <td>@pair.SecondCurrencySymbol</td>
         <td width="20"></td>
-        <td>@pair.TargetPrice</td>
+        <td>Target price = @pair.TargetPrice</td>
+        <td width="20"></td>
+        <td>Current price = @pair.PriceFirstToSecond.ToString("F2")</td>
+        <td>
+            <form asp-controller="Pairs" asp-action="DeletePair">
+                <input type="hidden" value=@pair.PairId name="pairId">
+                <input type="submit" value="Delete" name="deleteButton" class="btn btn-danger" />
+            </form>
+        </td>
     </tr>
     }
 </table>

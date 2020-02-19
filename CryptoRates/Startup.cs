@@ -64,7 +64,7 @@ namespace CryptoRates
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IRecurringJobManager recurringJob, CryptoContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJob, IRecurringJobManager recurringJob)
         {
             if (env.IsDevelopment())
             {
@@ -82,10 +82,17 @@ namespace CryptoRates
 
             app.UseHangfireDashboard();
 
+            backgroundJob.Enqueue<HangfireJobs>(x => x.GetAllCoins());
+
             recurringJob.AddOrUpdate<HangfireJobs>(
                 "GetAllCoins",
                 x => x.GetAllCoins(),
                 Cron.Daily());
+
+            recurringJob.AddOrUpdate<HangfireJobs>(
+                "UpdateCoinsPrices",
+                x => x.UpdateCoinsPrices(),
+                Cron.Minutely());
 
             app.UseRouting();
 
