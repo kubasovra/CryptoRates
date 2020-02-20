@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CryptoRates.Models;
+using IdentityServer4.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace CryptoRates.Data
 {
-    public class CryptoContext : IdentityDbContext
+    public class CryptoContext : ApiAuthorizationDbContext<ApplicationUser>
     {
-        public CryptoContext(DbContextOptions<CryptoContext> options)
-            : base(options)
+        public CryptoContext(
+            DbContextOptions options,
+            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
-            this.Database.EnsureCreated();
         }
 
         public DbSet<Currency> Currencies { get; set; }

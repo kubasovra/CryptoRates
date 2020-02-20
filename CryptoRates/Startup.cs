@@ -1,20 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
-using CryptoRates.Data;
+using CryptoRates.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using CryptoRates.Data;
 using Hangfire;
-using Hangfire.SqlServer;
 using CryptoRates.Hangfire;
+using Hangfire.SqlServer;
+using System;
 
 namespace CryptoRates
 {
@@ -30,18 +31,33 @@ namespace CryptoRates
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CryptoContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDbContext<CryptoContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<CryptoContext>();
+
+            services.AddIdentityServer()
+                .AddApiAuthorization<ApplicationUser, CryptoContext>();
+
+            services.AddAuthentication()
+                .AddIdentityServerJwt();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
 
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    IConfigurationSection googleAuthNSection = Configuration.GetSection("Authentication:Google");
+                    IConfigurationSection googleAuthNSection =
+                        Configuration.GetSection("Authentication:Google");
 
-                    options.CallbackPath = "/Home/Index";
+                    options.CallbackPath = "/Identity/Account/Manage";
                     options.ClientId = googleAuthNSection["ClientId"];
                     options.ClientSecret = googleAuthNSection["ClientSecret"];
                 });
@@ -73,12 +89,23 @@ namespace CryptoRates
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            if (!env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
+            }
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseIdentityServer();
+            app.UseAuthorization();
 
             app.UseHangfireDashboard();
 
@@ -94,17 +121,25 @@ namespace CryptoRates
                 x => x.UpdateCoinsPrices(),
                 Cron.Minutely());
 
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+            });
+
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
         }
     }

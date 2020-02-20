@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CryptoRates.Models;
 
 namespace CryptoRates.Data
 {
@@ -13,7 +14,7 @@ namespace CryptoRates.Data
     {
         [Key]
         public int PairId { get; set; }
-        public IdentityUser User { get; set; }
+        public ApplicationUser User { get; set; }
         public Currency FirstCurrency { get; set; }
         public Currency SecondCurrency { get; set; }
         public double PriceFirstToSecond { get; set; } = 0;

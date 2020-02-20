@@ -23,10 +23,10 @@ namespace CryptoRates.Controllers
     public class PairsController : Controller
     {
         CryptoContext _context;
-        UserManager<IdentityUser> _userManager;
+        UserManager<ApplicationUser> _userManager;
         IBackgroundJobClient _backgroundJob;
         ILogger<HangfireJobs> _hangfireLogger;
-        public PairsController(CryptoContext context, UserManager<IdentityUser> userManager, IBackgroundJobClient backgroundJob, ILogger<HangfireJobs> hangfireLogger)
+        public PairsController(CryptoContext context, UserManager<ApplicationUser> userManager, IBackgroundJobClient backgroundJob, ILogger<HangfireJobs> hangfireLogger)
         {
             _context = context;
             _userManager = userManager;
