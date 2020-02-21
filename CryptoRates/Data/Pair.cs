@@ -19,11 +19,11 @@ namespace CryptoRates.Data
         public Currency SecondCurrency { get; set; }
         public double PriceFirstToSecond { get; set; } = 0;
         public double PreviousPriceFirstToSecond { get; set; } = 0;
-        public double TargetPrice { get; set; }
-        public double TargetPriceAbsoluteChange { get; set; }
-        public double TargetPricePercentChange { get; set; }
-        public bool IsNotifyOnPrice { get; set; }
-        public bool IsNotifyOnAbsoluteChange { get; set; }
-        public bool IsNotifyOnPercentChange { get; set; }
+        public double TargetPrice { get; set; } = 0;
+        public double TargetPriceAbsoluteChange { get; set; } = 0;
+        public double TargetPricePercentChange { get; set; } = 0;
+        public bool IsNotifyOnPrice { get; set; } = false;
+        public bool IsNotifyOnAbsoluteChange { get; set; } = false;
+        public bool IsNotifyOnPercentChange { get; set; } = false;
     }
 }

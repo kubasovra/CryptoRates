@@ -2,96 +2,138 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Web;
-using System.Net.Http;
-using System.Text.Json;
-using System.Text.RegularExpressions;
-using CryptoRates.DeserializingJSON;
-using CryptoRates.Data;
-using CryptoRates.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Hangfire;
-using CryptoRates.Hangfire;
+using CryptoRates.Data;
+using Microsoft.AspNetCore.Identity;
+using CryptoRates.Models;
+using CryptoRates.Data.DTO;
 
 namespace CryptoRates.Controllers
 {
-    [Authorize]
-    public class PairsController : Controller
+    [Route("[controller]")]
+    [ApiController]
+    public class PairsController : ControllerBase
     {
-        CryptoContext _context;
-        UserManager<ApplicationUser> _userManager;
-        IBackgroundJobClient _backgroundJob;
-        ILogger<HangfireJobs> _hangfireLogger;
-        public PairsController(CryptoContext context, UserManager<ApplicationUser> userManager, IBackgroundJobClient backgroundJob, ILogger<HangfireJobs> hangfireLogger)
+        private readonly CryptoContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public PairsController(CryptoContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
-            _backgroundJob = backgroundJob;
-            _hangfireLogger = hangfireLogger;
         }
 
+        // GET: Pairs
         [HttpGet]
-        public IActionResult MyPairs()
+        public async Task<ActionResult<IEnumerable<PairDTO>>> GetPairs()
         {
-            List<PairViewModel> pairs = new List<PairViewModel>();
-            foreach (Pair pair in _context.Pairs.Where(p => _userManager.GetUserId(this.User) == p.User.Id).Include(c => c.FirstCurrency).Include(c => c.SecondCurrency).ToList())
-            {
-                pairs.Add(new PairViewModel(pair.PairId){ 
-                    FirstCurrencyName = pair.FirstCurrency.Name,
-                    FirstCurrencySymbol = pair.FirstCurrency.Symbol,
-                    FirstCurrencyImageURL = pair.FirstCurrency.ImageURL,
-                    SecondCurrencyName = pair.SecondCurrency.Name,
-                    SecondCurrencySymbol = pair.SecondCurrency.Symbol,
-                    SecondCurrencyImageURL = pair.SecondCurrency.ImageURL,
-                    PriceFirstToSecond = pair.PriceFirstToSecond,
-                    TargetPrice = pair.TargetPrice,
-                    TargetPriceAbsoluteChange = pair.TargetPriceAbsoluteChange,
-                    TargetPricePercentChange = pair.TargetPricePercentChange
-                });
-            }
-            return View(pairs);
+            //Yet it only shows all pairs, not for particular user. Gonna fix it when it will be possible to add new pairs
+            List<PairDTO> pairDTOs = await _context.Pairs.Include(p => p.User).Include(p => p.FirstCurrency).Include(p => p.SecondCurrency).Select(p => PairToDTO(p)).ToListAsync();
+            return pairDTOs;
         }
 
-        [HttpPost]
-        public async  Task<IActionResult> AddPair(string firstCoin, string secondCoin, string targetPrice)
+        // GET: Pairs/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Pair>> GetPair(int id)
         {
-            double price = double.Parse(targetPrice, System.Globalization.CultureInfo.InvariantCulture);
-            Currency firstCurrency = _context.Currencies.FirstOrDefault(c => c.Name == firstCoin);
-            Currency secondCurrency = _context.Currencies.FirstOrDefault(c => c.Name == secondCoin);
+            var pair = await _context.Pairs.FindAsync(id);
 
-            if (firstCurrency == null || secondCurrency == null || targetPrice == null)
+            if (pair == null)
             {
-                return RedirectToAction("MyPairs");
+                return NotFound();
             }
 
-            Pair newPair = new Pair() {
-                User = await _userManager.GetUserAsync(this.User),
-                FirstCurrency = firstCurrency,
-                SecondCurrency = secondCurrency,
-                TargetPrice = price,
-                IsNotifyOnPrice = true
+            return pair;
+        }
+
+        // PUT: Pairs/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutPair(int id, Pair pair)
+        {
+            if (id != pair.PairId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(pair).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PairExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // POST: Pairs
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPost]
+        public async Task<ActionResult<Pair>> PostPair(Pair pair)
+        {
+            _context.Pairs.Add(pair);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetPair), new { id = pair.PairId }, pair);
+        }
+
+        // DELETE: Pairs/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Pair>> DeletePair(int id)
+        {
+            var pair = await _context.Pairs.FindAsync(id);
+            if (pair == null)
+            {
+                return NotFound();
+            }
+
+            _context.Pairs.Remove(pair);
+            await _context.SaveChangesAsync();
+
+            return pair;
+        }
+
+        private bool PairExists(int id)
+        {
+            return _context.Pairs.Any(e => e.PairId == id);
+        }
+
+        private static PairDTO PairToDTO(Pair pair)
+        {
+            return new PairDTO(pair.PairId, pair.User.Id)
+            {
+                FirstCurrencyName = pair.FirstCurrency.Name,
+                FirstCurrencySymbol = pair.FirstCurrency.Symbol,
+                FirstCurrencyImageUrl = pair.FirstCurrency.ImageURL,
+                FirstCurrencyPageUrl = pair.FirstCurrency.WebPage,
+                SecondCurrencyName = pair.SecondCurrency.Name,
+                SecondCurrencySymbol = pair.SecondCurrency.Symbol,
+                SecondCurrencyImageUrl = pair.SecondCurrency.ImageURL,
+                SecondCurrencyPageUrl = pair.SecondCurrency.WebPage,
+                PriceFirstToSecond = pair.PriceFirstToSecond,
+                PreviousPriceFirstToSecond = pair.PreviousPriceFirstToSecond,
+                TargetPrice = pair.TargetPrice,
+                TargetPriceAbsoluteChange = pair.TargetPriceAbsoluteChange,
+                TargetPricePercentChange = pair.TargetPricePercentChange,
+                IsNotifyOnPrice = pair.IsNotifyOnPrice,
+                IsNotifyOnAbsoluteChange = pair.IsNotifyOnAbsoluteChange,
+                IsNotifyOnPercentChange = pair.IsNotifyOnPercentChange
             };
-            _context.Pairs.Add(newPair);
-            _context.SaveChanges();
-
-            HangfireJobs jobs = new HangfireJobs(_context, _hangfireLogger);
-            await jobs.UpdateCoinsPrices();
-
-            return RedirectToAction("MyPairs");
-        }
-
-        //Temporary
-        [HttpPost]
-        public IActionResult DeletePair(int pairId)
-        {
-            Pair pairToDelete = _context.Pairs.Find(pairId);
-            _context.Pairs.Remove(pairToDelete);
-            _context.SaveChanges();
-            return RedirectToAction("MyPairs");
         }
     }
 }

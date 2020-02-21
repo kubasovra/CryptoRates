@@ -1,0 +1,23 @@
+<h1 id="tableLabel">Pairs</h1>
+
+<p *ngIf="!pairs"><em>Loading...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="pairs; else caseNoPairs">
+  <ng-template #caseNoPairs>Oops, no pairs yet</ng-template>
+  <thead>
+    <tr>
+      <th>First coin (F)</th>
+      <th>Second coin (S)</th>
+      <th>Current price (F/S)</th>
+      <th>Target price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let pair of pairs">
+      <td><img [src]="pair.firstCurrencyImageUrl" width="20" height="20"/> {{ pair.firstCurrencySymbol }}</td>
+      <td><img [src]="pair.secondCurrencyImageUrl" width="20" height="20"/> {{ pair.secondCurrencySymbol }}</td>
+      <td>{{ pair.priceFirstToSecond }}</td>
+      <td *ngIf="pair.isNotifyOnPrice">{{ pair.targetPrice }}</td>
+    </tr>
+  </tbody>
+</table>

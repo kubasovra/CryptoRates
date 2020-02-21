@@ -21,9 +21,11 @@ namespace CryptoRates.Data
         public double ValueUSD { get; set; }
 
         [Url]
+        [Required]
         public string WebPage { get; set; }
 
         [Url]
+        [Required]
         public string ImageURL { get; set; }
     }
 }
