@@ -11,9 +11,12 @@ export class PairsComponent implements OnInit {
   public pairs: Pair[];
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+
     http.get<Pair[]>(baseUrl + 'pairs').subscribe(result => {
       this.pairs = result;
     }, error => console.error(error));
+
+
   }
 
   ngOnInit() {

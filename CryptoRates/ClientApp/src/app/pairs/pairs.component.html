@@ -2,6 +2,8 @@
 
 <p *ngIf="!pairs"><em>Loading...</em></p>
 
+<app-add-edit-pair></app-add-edit-pair>
+
 <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="pairs; else caseNoPairs">
   <ng-template #caseNoPairs>Oops, no pairs yet</ng-template>
   <thead>
