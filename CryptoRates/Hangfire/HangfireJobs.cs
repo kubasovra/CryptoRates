@@ -24,19 +24,20 @@ namespace CryptoRates.Hangfire
         //Updates the coin list, adding those who are not there yet
         public async Task GetAllCoins()
         {
-            string jsonString = await SendRequest(@"https://min-api.cryptocompare.com/data/all/coinlist");
-            AllCurrencies allCurrencies = JsonSerializer.Deserialize<AllCurrencies>(jsonString);
-            foreach (KeyValuePair<string, DeserializingJSON.Coin> pair in allCurrencies.Data)
+            string baseImageAndLinkUrl = "https://www.cryptocompare.com";
+            string jsonString = await SendRequest(@"https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym=USD");
+            CurrenciesToplist topList = JsonSerializer.Deserialize<CurrenciesToplist>(jsonString);
+            foreach (Datum datum in topList.Data)
             {
                 Currency currency = new Currency()
                 {
-                    Name = pair.Value.CoinName,
-                    Symbol = pair.Value.Symbol,
+                    Name = datum.CoinInfo.FullName,
+                    Symbol = datum.CoinInfo.Name,
                     ValueUSD = 0,
-                    WebPage = allCurrencies.BaseLinkUrl + pair.Value.Url,
-                    ImageURL = allCurrencies.BaseImageUrl + pair.Value.ImageUrl
+                    WebPage = baseImageAndLinkUrl + datum.CoinInfo.Url,
+                    ImageURL = baseImageAndLinkUrl + datum.CoinInfo.ImageUrl
                 };
-                if (_context.Currencies.FirstOrDefault(c => c.Name == pair.Value.CoinName) == null)
+                if (_context.Currencies.FirstOrDefault(c => c.Name == datum.CoinInfo.FullName) == null)
                 {
                     _context.Currencies.Add(currency);
                 }

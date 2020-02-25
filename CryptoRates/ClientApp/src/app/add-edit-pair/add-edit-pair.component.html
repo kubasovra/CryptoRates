@@ -3,7 +3,7 @@
     <mat-label>First coin</mat-label>
     <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-      <mat-option *ngFor="let currency of filteredCurrencies" [value]="currency.name">
+      <mat-option *ngFor="let currency of filteredCurrencies | async" [value]="currency.name">
         {{currency.image}}|{{currency.name}} ({{currency.symbol}}) 
       </mat-option>
     </mat-autocomplete>
