@@ -7,6 +7,7 @@ namespace CryptoRates.Data.DTO
 {
     public class PairDTO
     {
+        public PairDTO() { }
         public PairDTO(int pairId, string userId)
         {
             PairId = pairId;

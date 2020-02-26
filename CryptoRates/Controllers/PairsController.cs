@@ -36,16 +36,16 @@ namespace CryptoRates.Controllers
 
         // GET: Pairs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pair>> GetPair(int id)
+        public async Task<ActionResult<PairDTO>> GetPair(int id)
         {
-            var pair = await _context.Pairs.FindAsync(id);
+            var pairDTO = PairToDTO(await _context.Pairs.FindAsync(id));
 
-            if (pair == null)
+            if (pairDTO == null)
             {
                 return NotFound();
             }
 
-            return pair;
+            return pairDTO;
         }
 
         // PUT: Pairs/5
@@ -84,17 +84,19 @@ namespace CryptoRates.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Pair>> PostPair(Pair pair)
+        public async Task<ActionResult<PairDTO>> PostPair(PairDTO pairDTO)
         {
-            _context.Pairs.Add(pair);
+            ApplicationUser currentUser = await _userManager.GetUserAsync(this.User);
+            _context.Pairs.Add(PairFromDTO(pairDTO, currentUser, _context));
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPair), new { id = pair.PairId }, pair);
+            return NoContent();
+            //return CreatedAtAction(nameof(GetPair), new { id = pairDTO.PairId }, pairDTO);
         }
 
         // DELETE: Pairs/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Pair>> DeletePair(int id)
+        public async Task<ActionResult<PairDTO>> DeletePair(int id)
         {
             var pair = await _context.Pairs.FindAsync(id);
             if (pair == null)
@@ -105,7 +107,7 @@ namespace CryptoRates.Controllers
             _context.Pairs.Remove(pair);
             await _context.SaveChangesAsync();
 
-            return pair;
+            return NoContent();
         }
 
         private bool PairExists(int id)
@@ -133,6 +135,24 @@ namespace CryptoRates.Controllers
                 IsNotifyOnPrice = pair.IsNotifyOnPrice,
                 IsNotifyOnAbsoluteChange = pair.IsNotifyOnAbsoluteChange,
                 IsNotifyOnPercentChange = pair.IsNotifyOnPercentChange
+            };
+        }
+
+        private static Pair PairFromDTO(PairDTO pairDTO, ApplicationUser currentUser, CryptoContext context )
+        {
+            return new Pair()
+            {
+                User = currentUser,
+                FirstCurrency = context.Currencies.FirstOrDefault(c => c.Name == pairDTO.FirstCurrencyName),
+                SecondCurrency = context.Currencies.FirstOrDefault(c => c.Name == pairDTO.SecondCurrencyName),
+                PriceFirstToSecond = pairDTO.PriceFirstToSecond,
+                PreviousPriceFirstToSecond = pairDTO.PreviousPriceFirstToSecond,
+                TargetPrice = pairDTO.TargetPrice,
+                TargetPriceAbsoluteChange = pairDTO.TargetPriceAbsoluteChange,
+                TargetPricePercentChange = pairDTO.TargetPricePercentChange,
+                IsNotifyOnPrice = pairDTO.IsNotifyOnPrice,
+                IsNotifyOnAbsoluteChange = pairDTO.IsNotifyOnAbsoluteChange,
+                IsNotifyOnPercentChange = pairDTO.IsNotifyOnPercentChange
             };
         }
     }

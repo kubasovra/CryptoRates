@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Pair } from 'src/app/pair';
+import { PairsService } from '../core/services/pairs.service';
 
 @Component({
   selector: 'app-pairs',
@@ -10,37 +11,13 @@ export class PairsComponent implements OnInit {
 
   public pairs: Pair[];
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-
-    http.get<Pair[]>(baseUrl + 'pairs').subscribe(result => {
-      this.pairs = result;
-    }, error => console.error(error));
-
-
-  }
+  constructor(private pairsService: PairsService) { }
 
   ngOnInit() {
+    this.pairsService.getAllPairs().subscribe(result => {
+      this.pairs = result;
+    }, error => console.error(error));
   }
 
 }
 
-interface Pair {
-  pairId: number;
-  userId: string;
-  firstCurrencyName: string;
-  firstCurrencySymbol: string;
-  firstCurrencyImageUrl: string;
-  firstCurrencyPageUrl: string;
-  secondCurrencyName: string;
-  secondCurrencySymbol: string;
-  secondCurrencyImageUrl: string;
-  secondCurrencyPageUrl: string;
-  priceFirstToSecond: number;
-  previousPriceFirstToSecond: number;
-  targetPrice: number;
-  targetPriceAbsoluteChange: number;
-  targetPricePercentChange: number;
-  isNotifyOnPrice: boolean;
-  isNotifyOnAbsoluteChange: boolean;
-  isNotifyOnPercentChange: boolean;
-}

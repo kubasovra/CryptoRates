@@ -1,11 +1,28 @@
-<form class="example-form">
+<form class="new-pair-form">
   <mat-form-field class="example-full-width">
     <mat-label>First coin</mat-label>
-    <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+    <input #firstCurrencyName type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
       <mat-option *ngFor="let currency of filteredCurrencies | async" [value]="currency.name">
-        {{currency.image}}|{{currency.name}} ({{currency.symbol}}) 
+        <img src="{{currency.image}}" width="20" height="20" />|{{currency.name}} ({{currency.symbol}})
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Second coin</mat-label>
+    <input #secondCurrencyName  type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let currency of filteredCurrencies | async" [value]="currency.name">
+        <img src="{{currency.image}}" width="20" height="20" />|{{currency.name}} ({{currency.symbol}})
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Target price</mat-label>
+    <input matInput #targetPrice type="number" />
+  </mat-form-field>
+
+  <button mat-stroked-button (click)="onClickAddPair(firstCurrencyName.value, secondCurrencyName.value, targetPrice.value)">Add</button>
 </form>

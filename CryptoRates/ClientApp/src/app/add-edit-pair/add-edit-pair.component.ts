@@ -1,9 +1,11 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Currency } from 'src/app/currency';
+import { Pair } from 'src/app/pair';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { CurrenciesService } from '../core/services/currencies.service';
+import { PairsService } from '../core/services/pairs.service';
 
 @Component({
   selector: 'app-add-edit-pair',
@@ -13,19 +15,16 @@ import { HttpClient } from '@angular/common/http';
 export class AddEditPairComponent implements OnInit {
 
 
-  public allCurrencies: Currency[];
+  public allCurrencies: Currency[] = [];
   myControl = new FormControl();
   filteredCurrencies: Observable<Currency[]>;
   baseUrl: string;
 
-  
-  constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    this.baseUrl = baseUrl;
-  }
-  //The "allCurrencies" array remains "undefined"
-  ngOnInit() {
 
-    this.http.get<Currency[]>(this.baseUrl + 'currencies').subscribe(result => {
+  constructor(private currenciesService: CurrenciesService, private pairsService: PairsService) { }
+
+  ngOnInit() {
+    this.currenciesService.getAllCurrencies().subscribe(result => {
       this.allCurrencies = result;
     }, error => console.error(error));
 
@@ -38,14 +37,17 @@ export class AddEditPairComponent implements OnInit {
 
   }
 
-  displayFn(currency: Currency): string {
-    return currency && currency.name ? currency.name : '';
-  }
-
   private _filter(name: string): Currency[] {
-    const filterValue = name.toLowerCase();
+    const filterValue = name;
 
     return this.allCurrencies.filter(currency => currency.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
+  private onClickAddPair(firstCurrencyName: string, secondCurrencyName: string, targetPrice: number) {
+    let pair = new Pair();
+    pair.firstCurrencyName = firstCurrencyName;
+    pair.secondCurrencyName = secondCurrencyName;
+    pair.targetPrice = Number(targetPrice);
+    this.pairsService.addPair(pair).subscribe(r => { });
+  }
 }
