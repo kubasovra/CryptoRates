@@ -114,6 +114,8 @@ namespace CryptoRates
 
             backgroundJob.Enqueue<HangfireJobs>(x => x.GetAllCoins());
 
+            backgroundJob.Enqueue<HangfireJobs>(x => x.UpdateCoinsPrices());
+
             recurringJob.AddOrUpdate<HangfireJobs>(
                 "GetAllCoins",
                 x => x.GetAllCoins(),
