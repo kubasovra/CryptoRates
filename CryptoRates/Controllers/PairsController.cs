@@ -9,10 +9,11 @@ using CryptoRates.Data;
 using Microsoft.AspNetCore.Identity;
 using CryptoRates.Models;
 using CryptoRates.Data.DTO;
+using System.Security.Claims;
 
 namespace CryptoRates.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PairsController : ControllerBase
     {
@@ -25,16 +26,17 @@ namespace CryptoRates.Controllers
             _userManager = userManager;
         }
 
-        // GET: Pairs
+        // GET: api/Pairs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PairDTO>>> GetPairs()
         {
-            //Yet it only shows all pairs, not for particular user. Gonna fix it when it will be possible to add new pairs
-            List<PairDTO> pairDTOs = await _context.Pairs.Include(p => p.User).Include(p => p.FirstCurrency).Include(p => p.SecondCurrency).Select(p => PairToDTO(p)).ToListAsync();
+            var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ApplicationUser currentUser = await _userManager.FindByIdAsync(id);
+            List<PairDTO> pairDTOs = await _context.Pairs.Where(p => p.User == currentUser).Include(p => p.User).Include(p => p.FirstCurrency).Include(p => p.SecondCurrency).Select(p => PairToDTO(p)).ToListAsync();
             return pairDTOs;
         }
 
-        // GET: Pairs/5
+        // GET: api/Pairs/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PairDTO>> GetPair(int id)
         {
@@ -48,7 +50,7 @@ namespace CryptoRates.Controllers
             return pairDTO;
         }
 
-        // PUT: Pairs/5
+        // PUT: api/Pairs/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
@@ -80,23 +82,26 @@ namespace CryptoRates.Controllers
             return NoContent();
         }
 
-        // POST: Pairs
+        // POST: api/Pairs
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<PairDTO>> PostPair(PairDTO pairDTO)
         {
-            ApplicationUser currentUser = await _userManager.GetUserAsync(this.User);
-            _context.Pairs.Add(PairFromDTO(pairDTO, currentUser, _context));
+            var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ApplicationUser currentUser = await _userManager.FindByIdAsync(id);
+            Pair newPair = PairFromDTO(pairDTO, currentUser, _context);
+            _context.Pairs.Add(newPair);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-            //return CreatedAtAction(nameof(GetPair), new { id = pairDTO.PairId }, pairDTO);
+            //PairFromDTO fills a pair with all needed data, such as links, and here we get it back
+            pairDTO = PairToDTO(newPair);
+            return pairDTO;
         }
 
-        // DELETE: Pairs/5
+        // DELETE: api/Pairs/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<PairDTO>> DeletePair(int id)
+        public async Task<ActionResult<int>> DeletePair(int id)
         {
             var pair = await _context.Pairs.FindAsync(id);
             if (pair == null)
@@ -107,7 +112,7 @@ namespace CryptoRates.Controllers
             _context.Pairs.Remove(pair);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return id;
         }
 
         private bool PairExists(int id)

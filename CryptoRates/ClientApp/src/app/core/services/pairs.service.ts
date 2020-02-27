@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Pair } from 'src/app/pair';
+import { Pair } from 'src/app/core/models/pair';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +14,15 @@ export class PairsService {
     this.baseUrl = baseUrl;
   }
 
-  getAllPairs() {
-    return this.http.get<Pair[]>(this.baseUrl + 'pairs');
+  getAllPairs(): Observable<Pair[]> {
+    return this.http.get<Pair[]>(this.baseUrl + 'api/pairs');
   }
 
-  addPair(pair: Pair) {
-    return this.http.post<Pair>(this.baseUrl + 'pairs', pair);
+  addPair(pair: Pair): Observable<Pair> {
+    return this.http.post<Pair>(this.baseUrl + 'api/pairs', pair);
+  }
+
+  deletePair(id: number): Observable<number> {
+    return this.http.delete<number>(this.baseUrl + 'api/pairs/' + id);
   }
 }

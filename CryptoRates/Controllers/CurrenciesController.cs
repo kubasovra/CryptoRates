@@ -10,7 +10,7 @@ using CryptoRates.Data.DTO;
 
 namespace CryptoRates.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CurrenciesController : ControllerBase
     {
@@ -21,7 +21,7 @@ namespace CryptoRates.Controllers
             _context = context;
         }
 
-        // GET: Currencies
+        // GET: api/Currencies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CurrencyDTO>>> GetCurrencies()
         {
@@ -29,7 +29,7 @@ namespace CryptoRates.Controllers
             return currencies;
         }
 
-        // GET: Currencies/5
+        // GET: api/Currencies/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Currency>> GetCurrency(int id)
         {
@@ -43,7 +43,7 @@ namespace CryptoRates.Controllers
             return currency;
         }
 
-        // PUT: Currencies/5
+        // PUT: api/Currencies/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
@@ -75,7 +75,7 @@ namespace CryptoRates.Controllers
             return NoContent();
         }
 
-        // POST: Currencies
+        // POST: api/Currencies
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
@@ -87,7 +87,7 @@ namespace CryptoRates.Controllers
             return CreatedAtAction("GetCurrency", new { id = currency.CurrencyId }, currency);
         }
 
-        // DELETE: Currencies/5
+        // DELETE: api/Currencies/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Currency>> DeleteCurrency(int id)
         {

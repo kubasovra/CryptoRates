@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject, Input } from '@angular/core';
+import { Component, OnInit, Inject, Input, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Currency } from 'src/app/currency';
-import { Pair } from 'src/app/pair';
+import { Currency } from 'src/app/core/models/currency';
+import { Pair } from 'src/app/core/models/pair';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { CurrenciesService } from '../core/services/currencies.service';
@@ -14,7 +14,7 @@ import { PairsService } from '../core/services/pairs.service';
 })
 export class AddEditPairComponent implements OnInit {
 
-
+  @Output() pairAdded: EventEmitter<Pair> = new EventEmitter<Pair>();
   public allCurrencies: Currency[] = [];
   myControl = new FormControl();
   filteredCurrencies: Observable<Currency[]>;
@@ -48,6 +48,10 @@ export class AddEditPairComponent implements OnInit {
     pair.firstCurrencyName = firstCurrencyName;
     pair.secondCurrencyName = secondCurrencyName;
     pair.targetPrice = Number(targetPrice);
-    this.pairsService.addPair(pair).subscribe(r => { });
+    if (pair.targetPrice != 0) {
+      pair.isNotifyOnPrice = true;
+    }
+
+    this.pairsService.addPair(pair).subscribe((event) => this.pairAdded.emit(event));
   }
 }

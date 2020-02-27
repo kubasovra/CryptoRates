@@ -2,7 +2,7 @@
 
 <p *ngIf="!pairs"><em>Loading...</em></p>
 
-<app-add-edit-pair></app-add-edit-pair>
+<app-add-edit-pair (pairAdded)="newPairAdded($event)" ></app-add-edit-pair>
 
 <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="pairs; else caseNoPairs">
   <ng-template #caseNoPairs>Oops, no pairs yet</ng-template>
@@ -16,10 +16,13 @@
   </thead>
   <tbody>
     <tr *ngFor="let pair of pairs">
-      <td><img [src]="pair.firstCurrencyImageUrl" width="20" height="20"/> {{ pair.firstCurrencySymbol }}</td>
-      <td><img [src]="pair.secondCurrencyImageUrl" width="20" height="20"/> {{ pair.secondCurrencySymbol }}</td>
-      <td>{{ pair.priceFirstToSecond }}</td>
-      <td *ngIf="pair.isNotifyOnPrice">{{ pair.targetPrice }}</td>
+      <td><img [src]="pair.firstCurrencyImageUrl" width="20" height="20" /> {{ pair.firstCurrencySymbol }}</td>
+      <td><img [src]="pair.secondCurrencyImageUrl" width="20" height="20" /> {{ pair.secondCurrencySymbol }}</td>
+      <td *ngIf="pair.priceFirstToSecond; else noPriceYet">{{ pair.priceFirstToSecond }}</td>
+      <ng-template #noPriceYet><td>No price yet, wait a minute</td></ng-template>
+      <td *ngIf="pair.isNotifyOnPrice; else emptyTargetPrice">{{ pair.targetPrice }}</td>
+      <ng-template #emptyTargetPrice><td>No target price is set</td></ng-template>
+      <td><button class="btn btn-danger btn-group-sm" (click)="deletePair(pair.pairId)">Delete</button></td>
     </tr>
   </tbody>
 </table>

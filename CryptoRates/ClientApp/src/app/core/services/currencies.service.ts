@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Currency } from '../../currency';
+import { Currency } from 'src/app/core/models/currency';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class CurrenciesService {
     this.baseUrl = baseUrl;
   }
 
-  getAllCurrencies() {
-    return this.http.get<Currency[]>(this.baseUrl + 'currencies');
+  getAllCurrencies(): Observable<Currency[]> {
+    return this.http.get<Currency[]>(this.baseUrl + 'api/currencies');
   }
 }
