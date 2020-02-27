@@ -13,12 +13,17 @@ export class PairsComponent implements OnInit {
   public pairs: Pair[];
 
   constructor(private pairsService: PairsService) {
+
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+
     this.updatePairs();
 
-
-    //Prices update in the db every minute, thats why we send a query once a minute
-    let updatePairsSubsription = interval(60000).subscribe(() => {
+    //Prices update in the db every 10 seconds
+    let updatePairsSubsription = interval(10000).subscribe(() => {
       this.updatePairs();
+      this.checkPrices();
     });
   }
 
@@ -45,14 +50,18 @@ export class PairsComponent implements OnInit {
       if (pair.isNotifyOnPrice) {
         if (pair.previousPriceFirstToSecond > pair.targetPrice && pair.targetPrice > pair.priceFirstToSecond) {
           //Downwards
-          console.log(pair.firstCurrencySymbol + '/' + pair.secondCurrencySymbol + ' crossed ' + pair.targetPrice + ' downwards');
+          this.notify("Bears are pulling!", pair.firstCurrencySymbol + '/' + pair.secondCurrencySymbol + ' crossed ' + pair.targetPrice + ' downwards');
         }
         else if (pair.previousPriceFirstToSecond < pair.targetPrice && pair.targetPrice < pair.priceFirstToSecond) {
           //Upwards
-          console.log(pair.firstCurrencySymbol + '/' + pair.secondCurrencySymbol + ' crossed ' + pair.targetPrice + ' upwards');
+          this.notify("Bulls are pushing!", pair.firstCurrencySymbol + '/' + pair.secondCurrencySymbol + ' crossed ' + pair.targetPrice + ' upwards');
         }
       }
     });
+  }
+
+  notify(title: string, text: string) {
+    let notification = new Notification(title, { body: text });
   }
 }
 

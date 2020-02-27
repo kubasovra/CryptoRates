@@ -124,7 +124,7 @@ namespace CryptoRates
             recurringJob.AddOrUpdate<HangfireJobs>(
                 "UpdateCoinsPrices",
                 x => x.UpdateCoinsPrices(),
-                Cron.Minutely());
+                "*/10 * * * * *");
 
             app.UseEndpoints(endpoints =>
             {

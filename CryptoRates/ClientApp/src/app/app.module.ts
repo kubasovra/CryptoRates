@@ -46,6 +46,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -99,7 +101,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
       { path: 'pairs', component: PairsComponent, canActivate: [AuthorizeGuard] },
       { path: 'add-edit-pair', component: AddEditPairComponent, canActivate: [AuthorizeGuard] }
     ]),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }
