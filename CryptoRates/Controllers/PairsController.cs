@@ -124,14 +124,20 @@ namespace CryptoRates.Controllers
         {
             return new PairDTO(pair.PairId, pair.User.Id)
             {
-                FirstCurrencyName = pair.FirstCurrency.Name,
-                FirstCurrencySymbol = pair.FirstCurrency.Symbol,
-                FirstCurrencyImageUrl = pair.FirstCurrency.ImageURL,
-                FirstCurrencyPageUrl = pair.FirstCurrency.WebPage,
-                SecondCurrencyName = pair.SecondCurrency.Name,
-                SecondCurrencySymbol = pair.SecondCurrency.Symbol,
-                SecondCurrencyImageUrl = pair.SecondCurrency.ImageURL,
-                SecondCurrencyPageUrl = pair.SecondCurrency.WebPage,
+                FirstCurrency = new CurrencyDTO(
+                    pair.FirstCurrency.CurrencyId, 
+                    pair.FirstCurrency.Name,
+                    pair.FirstCurrency.Symbol,
+                    pair.FirstCurrency.ValueUSD,
+                    pair.FirstCurrency.WebPage,
+                    pair.FirstCurrency.ImageURL),
+                SecondCurrency = new CurrencyDTO(
+                    pair.SecondCurrency.CurrencyId,
+                    pair.SecondCurrency.Name,
+                    pair.SecondCurrency.Symbol,
+                    pair.SecondCurrency.ValueUSD,
+                    pair.SecondCurrency.WebPage,
+                    pair.SecondCurrency.ImageURL),
                 PriceFirstToSecond = pair.PriceFirstToSecond,
                 PreviousPriceFirstToSecond = pair.PreviousPriceFirstToSecond,
                 TargetPrice = pair.TargetPrice,
@@ -148,8 +154,8 @@ namespace CryptoRates.Controllers
             return new Pair()
             {
                 User = currentUser,
-                FirstCurrency = context.Currencies.FirstOrDefault(c => c.Name == pairDTO.FirstCurrencyName),
-                SecondCurrency = context.Currencies.FirstOrDefault(c => c.Name == pairDTO.SecondCurrencyName),
+                FirstCurrency = context.Currencies.FirstOrDefault(c => c.Name.ToLower() == pairDTO.FirstCurrency.Name.ToLower()),
+                SecondCurrency = context.Currencies.FirstOrDefault(c => c.Name.ToLower() == pairDTO.SecondCurrency.Name.ToLower()),
                 PriceFirstToSecond = pairDTO.PriceFirstToSecond,
                 PreviousPriceFirstToSecond = pairDTO.PreviousPriceFirstToSecond,
                 TargetPrice = pairDTO.TargetPrice,

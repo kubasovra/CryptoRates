@@ -50,11 +50,11 @@ export class PairsComponent implements OnInit {
       if (pair.isNotifyOnPrice) {
         if (pair.previousPriceFirstToSecond > pair.targetPrice && pair.targetPrice > pair.priceFirstToSecond) {
           //Downwards
-          this.notify("Bears are pulling!", pair.firstCurrencySymbol + '/' + pair.secondCurrencySymbol + ' crossed ' + pair.targetPrice + ' downwards');
+          this.notify("Bears are pulling!", pair.firstCurrency.symbol + '/' + pair.secondCurrency.symbol + ' crossed ' + pair.targetPrice + ' downwards');
         }
         else if (pair.previousPriceFirstToSecond < pair.targetPrice && pair.targetPrice < pair.priceFirstToSecond) {
           //Upwards
-          this.notify("Bulls are pushing!", pair.firstCurrencySymbol + '/' + pair.secondCurrencySymbol + ' crossed ' + pair.targetPrice + ' upwards');
+          this.notify("Bulls are pushing!", pair.firstCurrency.symbol + '/' + pair.secondCurrency.symbol + ' crossed ' + pair.targetPrice + ' upwards');
         }
       }
     });

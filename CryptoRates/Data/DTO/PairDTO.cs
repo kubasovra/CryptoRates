@@ -15,14 +15,8 @@ namespace CryptoRates.Data.DTO
         }
         public int PairId { get; private set; }
         public string UserId { get; private set; }
-        public string FirstCurrencyName { get; set; }
-        public string FirstCurrencySymbol { get; set; }
-        public string FirstCurrencyImageUrl { get; set; }
-        public string FirstCurrencyPageUrl { get; set; }
-        public string SecondCurrencyName { get; set; }
-        public string SecondCurrencySymbol { get; set; }
-        public string SecondCurrencyImageUrl { get; set; }
-        public string SecondCurrencyPageUrl { get; set; }
+        public CurrencyDTO FirstCurrency { get; set; }
+        public CurrencyDTO SecondCurrency { get; set; }
         public double PriceFirstToSecond { get; set; }
         public double PreviousPriceFirstToSecond { get; set; }
         public double TargetPrice { get; set; }

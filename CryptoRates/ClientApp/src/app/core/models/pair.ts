@@ -1,14 +1,10 @@
+import { Currency } from "./currency";
+
 export class Pair {
   pairId: number;
   userId: string;
-  firstCurrencyName: string;
-  firstCurrencySymbol: string;
-  firstCurrencyImageUrl: string;
-  firstCurrencyPageUrl: string;
-  secondCurrencyName: string;
-  secondCurrencySymbol: string;
-  secondCurrencyImageUrl: string;
-  secondCurrencyPageUrl: string;
+  firstCurrency: Currency;
+  secondCurrency: Currency;
   priceFirstToSecond: number;
   previousPriceFirstToSecond: number;
   targetPrice: number;

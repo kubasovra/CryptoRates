@@ -7,6 +7,7 @@ namespace CryptoRates.Data.DTO
 {
     public class CurrencyDTO
     {
+        public CurrencyDTO() { }
         public CurrencyDTO(int id, string name, string symbol, double value, string webPage, string image)
         {
             CurrencyId = id;
