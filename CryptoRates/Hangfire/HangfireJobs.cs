@@ -9,17 +9,22 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using CryptoRates.Data;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace CryptoRates.Hangfire
 {
     public class HangfireJobs
     {
-        private CryptoContext _context;
-        private ILogger<HangfireJobs> _logger;
-        public HangfireJobs(CryptoContext context, ILogger<HangfireJobs> logger)
+        private readonly CryptoContext _context;
+        private readonly ILogger<HangfireJobs> _logger;
+        private readonly ILogger<EmailSender> _emailLogger;
+        private readonly IConfiguration _configuration;
+        public HangfireJobs(CryptoContext context, ILogger<HangfireJobs> logger, ILogger<EmailSender> emailLogger, IConfiguration configuration)
         {
             _context = context;
             _logger = logger;
+            _emailLogger = emailLogger;
+            _configuration = configuration;
         }
         //Updates the coin list, adding those who are not there yet
         public async Task GetAllCoins()
@@ -42,12 +47,20 @@ namespace CryptoRates.Hangfire
                     _context.Currencies.Add(currency);
                 }
             }
-            _context.SaveChanges();
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
         }
 
         public async Task UpdateCoinsPrices()
         {
-            List<Pair> allPairs = _context.Pairs.Include(p => p.FirstCurrency).Include(p => p.SecondCurrency).ToList();
+            List<Pair> allPairs = _context.Pairs.Include(p => p.User).Include(p => p.FirstCurrency).Include(p => p.SecondCurrency).ToList();
             if (allPairs != null)
             {
                 string baseUrl = @"https://min-api.cryptocompare.com/data/pricemulti";
@@ -83,7 +96,15 @@ namespace CryptoRates.Hangfire
                 }
                 CheckPairsPrice(allPairs);
             }
-            _context.SaveChanges();
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
         }
 
         private async Task<string> SendRequest(string request)
@@ -99,15 +120,14 @@ namespace CryptoRates.Hangfire
             {
                 if (pair.IsNotifyOnPrice)
                 {
-                    //If the price is crossed downwards
-                    if (pair.PreviousPriceFirstToSecond > pair.TargetPrice && pair.TargetPrice > pair.PriceFirstToSecond)
+                    if ((pair.PreviousPriceFirstToSecond > pair.TargetPrice && pair.TargetPrice > pair.PriceFirstToSecond) || (pair.PreviousPriceFirstToSecond < pair.TargetPrice && pair.TargetPrice < pair.PriceFirstToSecond))
                     {
-                        _logger.LogInformation(String.Format("(Bears) {0}/{1}={2}   Previous price: {3}   Target price was: {4}", pair.FirstCurrency.Symbol, pair.SecondCurrency.Symbol, pair.PriceFirstToSecond, pair.PreviousPriceFirstToSecond, pair.TargetPrice));
-                    }
-                    //If the price is crossed upwards
-                    else if (pair.PreviousPriceFirstToSecond < pair.TargetPrice && pair.TargetPrice < pair.PriceFirstToSecond)
-                    {
-                        _logger.LogInformation(String.Format("(Bulls) {0}/{1}={2}   Previous price: {3}   Target price was: {4}", pair.FirstCurrency.Symbol, pair.SecondCurrency.Symbol, pair.PriceFirstToSecond, pair.PreviousPriceFirstToSecond, pair.TargetPrice));
+                        EmailSender emailSender = new EmailSender(_emailLogger, _configuration);
+                        emailSender.SendEmail(
+                            pair.User.Email,
+                            string.Format("{0}/{1} crossed {2}", pair.FirstCurrency.Symbol, pair.SecondCurrency.Symbol, pair.TargetPrice),
+                            string.Format("{0}/{1} price is now {2}, last known price was {3}", pair.FirstCurrency.Symbol, pair.SecondCurrency.Symbol, pair.PriceFirstToSecond, pair.PreviousPriceFirstToSecond)
+                            );
                     }
                 }
             }
