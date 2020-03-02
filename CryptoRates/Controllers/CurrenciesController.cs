@@ -110,7 +110,14 @@ namespace CryptoRates.Controllers
 
         private static CurrencyDTO CurrencyToDTO(Currency currency)
         {
-            return new CurrencyDTO(currency.CurrencyId, currency.Name, currency.Symbol, currency.ValueUSD, currency.WebPage, currency.ImageURL);
+            return new CurrencyDTO() {
+                CurrencyId = currency.CurrencyId,
+                Name = currency.Name,
+                Symbol = currency.Symbol,
+                ImageURL = currency.ImageURL,
+                WebPage = currency.WebPage,
+                ValueUSD = currency.ValueUSD
+            };
         }
     }
 }

@@ -1,20 +1,18 @@
 <form class="new-pair-form">
   <mat-form-field class="example-full-width">
     <mat-label>First coin</mat-label>
-    <input #firstCurrencyName type="text" matInput [formControl]="firstCurrencyControl" [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+    <input #firstCurrencyName type="text" matInput [formControl]="firstCurrencyControl" [matAutocomplete]="autoCompleteFirst">
+    <mat-autocomplete #autoCompleteFirst="matAutocomplete" [displayWith]="displayFn">
       <mat-option *ngFor="let currency of firstFilteredCurrencies | async" [value]="currency.name">
         <img [src]="currency.imageURL" width="20" height="20" />|{{currency.name}} ({{currency.symbol}})
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
 
-
-  <!--If you uncomment this - autocomplete breaks-->
   <mat-form-field class="example-full-width">
     <mat-label>Second coin</mat-label>
-    <input #secondCurrencyName type="text" matInput [formControl]="secondCurrencyControl" [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+    <input #secondCurrencyName type="text" matInput [formControl]="secondCurrencyControl" [matAutocomplete]="autoCompleteSecond">
+    <mat-autocomplete #autoCompleteSecond="matAutocomplete" [displayWith]="displayFn">
       <mat-option *ngFor="let currency of secondFilteredCurrencies | async" [value]="currency.name">
         <img [src]="currency.imageURL" width="20" height="20" />|{{currency.name}} ({{currency.symbol}})
       </mat-option>
@@ -33,8 +31,8 @@
     You must write a full name of the first currency, or just choose from the dropdown
   </div>
 
-  <!--<div class="alert alert-danger"
+  <div class="alert alert-danger"
        *ngIf="secondCurrencyControl.invalid && secondCurrencyControl.touched">
     You must write a full name of the second currency, or just choose from the dropdown
-  </div>-->
+  </div>
 </form>

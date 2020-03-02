@@ -124,20 +124,22 @@ namespace CryptoRates.Controllers
         {
             return new PairDTO(pair.PairId, pair.User.Id)
             {
-                FirstCurrency = new CurrencyDTO(
-                    pair.FirstCurrency.CurrencyId, 
-                    pair.FirstCurrency.Name,
-                    pair.FirstCurrency.Symbol,
-                    pair.FirstCurrency.ValueUSD,
-                    pair.FirstCurrency.WebPage,
-                    pair.FirstCurrency.ImageURL),
-                SecondCurrency = new CurrencyDTO(
-                    pair.SecondCurrency.CurrencyId,
-                    pair.SecondCurrency.Name,
-                    pair.SecondCurrency.Symbol,
-                    pair.SecondCurrency.ValueUSD,
-                    pair.SecondCurrency.WebPage,
-                    pair.SecondCurrency.ImageURL),
+                FirstCurrency = new CurrencyDTO() {
+                    CurrencyId = pair.FirstCurrency.CurrencyId,
+                    Name = pair.FirstCurrency.Name,
+                    Symbol = pair.FirstCurrency.Symbol,
+                    ValueUSD = pair.FirstCurrency.ValueUSD,
+                    WebPage = pair.FirstCurrency.WebPage,
+                    ImageURL = pair.FirstCurrency.ImageURL
+                },
+                SecondCurrency = new CurrencyDTO() {
+                    CurrencyId = pair.SecondCurrency.CurrencyId,
+                    Name = pair.SecondCurrency.Name,
+                    Symbol = pair.SecondCurrency.Symbol,
+                    ValueUSD = pair.SecondCurrency.ValueUSD,
+                    WebPage = pair.SecondCurrency.WebPage,
+                    ImageURL = pair.SecondCurrency.ImageURL
+                },
                 PriceFirstToSecond = pair.PriceFirstToSecond,
                 PreviousPriceFirstToSecond = pair.PreviousPriceFirstToSecond,
                 TargetPrice = pair.TargetPrice,

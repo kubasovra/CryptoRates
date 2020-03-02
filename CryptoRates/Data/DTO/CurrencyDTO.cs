@@ -8,20 +8,11 @@ namespace CryptoRates.Data.DTO
     public class CurrencyDTO
     {
         public CurrencyDTO() { }
-        public CurrencyDTO(int id, string name, string symbol, double value, string webPage, string image)
-        {
-            CurrencyId = id;
-            Name = name;
-            Symbol = symbol;
-            ValueUSD = value;
-            WebPage = webPage;
-            ImageURL = image;
-        }
-        public int CurrencyId { get; private set; }
-        public string Name { get; private set; }
-        public string Symbol { get; private set; }
-        public double ValueUSD { get; private set; }
-        public string WebPage { get; private set; }
-        public string ImageURL { get; private set; }
+        public int CurrencyId { get; set; }
+        public string Name { get; set; }
+        public string Symbol { get; set; }
+        public double ValueUSD { get; set; }
+        public string WebPage { get; set; }
+        public string ImageURL { get; set; }
     }
 }

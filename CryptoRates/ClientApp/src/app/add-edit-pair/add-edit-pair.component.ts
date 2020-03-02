@@ -59,7 +59,7 @@ export class AddEditPairComponent implements OnInit {
   }
 
   private onClickAddPair(firstCurrencyName: string, secondCurrencyName: string, targetPrice: number) {
-    let pair = new Pair();
+    let pair: Pair = new Pair();
     pair.firstCurrency = new Currency();
     pair.secondCurrency = new Currency();
     pair.firstCurrency.name = firstCurrencyName;

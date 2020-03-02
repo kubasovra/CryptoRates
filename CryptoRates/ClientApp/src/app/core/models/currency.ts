@@ -1,8 +1,8 @@
 export class Currency {
-  id: number;
+  currencyId: number;
   name: string;
   symbol: string;
-  value: number;
+  valueUSD: number;
   webPage: string;
-  imageUrl: string;
+  imageURL: string;
 }
