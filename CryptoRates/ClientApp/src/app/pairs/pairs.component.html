@@ -22,6 +22,8 @@
       <ng-template #noPriceYet><td>No price yet, wait a minute</td></ng-template>
       <td *ngIf="pair.isNotifyOnPrice; else emptyTargetPrice">{{ pair.targetPrice }}</td>
       <ng-template #emptyTargetPrice><td>No target price is set</td></ng-template>
+      <!--An attempt to make a chart, if applied - rendering is lagging as hell-->
+      <!--<td><app-chart [prices]="pair.historicalData"></app-chart></td>-->
       <td><button class="btn btn-danger btn-group-sm" (click)="deletePair(pair.pairId)">Delete</button></td>
     </tr>
   </tbody>

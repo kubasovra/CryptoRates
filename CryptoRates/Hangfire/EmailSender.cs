@@ -18,25 +18,7 @@ namespace CryptoRates.Hangfire
             _logger = logger;
             _configuration = configuration;
         }
-        private void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
-        {
-            // Get the unique identifier for this asynchronous operation.
-            String token = (string)e.UserState;
-
-            if (e.Cancelled)
-            {
-                _logger.LogInformation("[{0}] Send canceled.", token);
-            }
-            if (e.Error != null)
-            {
-                _logger.LogInformation("[{0}] {1}", token, e.Error.ToString());
-            }
-            else
-            {
-                _logger.LogInformation("Message sent.");
-            }
-        }
-        public void SendEmail(string destinationEmail, string messageSubject, string messageBody)
+        public async Task<bool> SendEmail(string destinationEmail, string messageSubject, string messageBody)
         {
             IConfigurationSection smtpSection = _configuration.GetSection("SmtpClient");
             SmtpClient client = new SmtpClient(smtpSection["Host"]);
@@ -55,12 +37,16 @@ namespace CryptoRates.Hangfire
             message.Subject = messageSubject;
             message.SubjectEncoding = System.Text.Encoding.UTF8;
 
-            client.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
-            // The userState can be any object that allows your callback 
-            // method to identify this send operation.
-            // For this example, the userToken is a string constant.
-            string userState = destinationEmail + messageBody;
-            client.SendAsync(message, userState);
+            try
+            {
+                await client.SendMailAsync(message);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+            return true;
         }
     }
 }

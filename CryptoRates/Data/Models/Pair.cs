@@ -10,6 +10,13 @@ using CryptoRates.Models;
 
 namespace CryptoRates.Data
 {
+    public enum PairStates
+    {
+        Working,
+        Pending,
+        Notified,
+        Failed
+    }
     public class Pair
     {
         [Key]
@@ -23,6 +30,10 @@ namespace CryptoRates.Data
 
         [Required]
         public Currency SecondCurrency { get; set; }
+
+        public PairStates State { get; set; } = PairStates.Working;
+
+        public List<string> HistoricalData { get; set; }
 
         public double PriceFirstToSecond { get; set; } = 0;
 

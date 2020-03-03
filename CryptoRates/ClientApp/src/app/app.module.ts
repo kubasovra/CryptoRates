@@ -46,7 +46,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { environment } from '../environments/environment';
+import { ChartComponent } from './chart/chart.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +55,8 @@ import { environment } from '../environments/environment';
     HomeComponent,
     CounterComponent,
     PairsComponent,
-    AddEditPairComponent
+    AddEditPairComponent,
+    ChartComponent
   ],
   imports: [
     MatCheckboxModule,

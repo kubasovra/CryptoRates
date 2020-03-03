@@ -140,6 +140,8 @@ namespace CryptoRates.Controllers
                     WebPage = pair.SecondCurrency.WebPage,
                     ImageURL = pair.SecondCurrency.ImageURL
                 },
+                State = pair.State,
+                HistoricalData = pair.HistoricalData?.Select(double.Parse).ToList(),
                 PriceFirstToSecond = pair.PriceFirstToSecond,
                 PreviousPriceFirstToSecond = pair.PreviousPriceFirstToSecond,
                 TargetPrice = pair.TargetPrice,
@@ -158,6 +160,8 @@ namespace CryptoRates.Controllers
                 User = currentUser,
                 FirstCurrency = context.Currencies.FirstOrDefault(c => c.Name.ToLower() == pairDTO.FirstCurrency.Name.ToLower()),
                 SecondCurrency = context.Currencies.FirstOrDefault(c => c.Name.ToLower() == pairDTO.SecondCurrency.Name.ToLower()),
+                State = pairDTO.State,
+                HistoricalData = pairDTO.HistoricalData?.Select(p => p.ToString()).ToList(),
                 PriceFirstToSecond = pairDTO.PriceFirstToSecond,
                 PreviousPriceFirstToSecond = pairDTO.PreviousPriceFirstToSecond,
                 TargetPrice = pairDTO.TargetPrice,

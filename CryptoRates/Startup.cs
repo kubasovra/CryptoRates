@@ -17,6 +17,7 @@ using Hangfire;
 using CryptoRates.Hangfire;
 using Hangfire.SqlServer;
 using System;
+using Hangfire.Server;
 
 namespace CryptoRates
 {
@@ -124,6 +125,11 @@ namespace CryptoRates
             recurringJob.AddOrUpdate<HangfireJobs>(
                 "UpdateCoinsPrices",
                 x => x.UpdateCoinsPrices(),
+                "*/10 * * * * *");
+
+            recurringJob.AddOrUpdate<HangfireJobs>(
+                "SendEmails",
+                x => x.SendEmails(null),
                 "*/10 * * * * *");
 
             app.UseEndpoints(endpoints =>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Pair } from 'src/app/core/models/pair';
 import { PairsService } from '../core/services/pairs.service';
 import { interval } from 'rxjs';
@@ -46,6 +46,7 @@ export class PairsComponent implements OnInit {
   }
 
   checkPrices() {
+    //Yet it is still spamming with notifications
     this.pairs.forEach((pair) => {
       if (pair.isNotifyOnPrice) {
         if (pair.previousPriceFirstToSecond > pair.targetPrice && pair.targetPrice > pair.priceFirstToSecond) {
@@ -61,7 +62,6 @@ export class PairsComponent implements OnInit {
   }
 
   notify(title: string, text: string) {
-    let notification = new Notification(title, { body: text });
+    new Notification(title, { body: text });
   }
 }
-

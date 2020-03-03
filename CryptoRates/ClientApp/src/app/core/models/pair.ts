@@ -5,6 +5,7 @@ export class Pair {
   userId: string;
   firstCurrency: Currency;
   secondCurrency: Currency;
+  historicalData: number[];
   priceFirstToSecond: number;
   previousPriceFirstToSecond: number;
   targetPrice: number;

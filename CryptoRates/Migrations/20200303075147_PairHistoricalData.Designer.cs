@@ -4,14 +4,16 @@ using CryptoRates.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CryptoRates.Migrations
 {
     [DbContext(typeof(CryptoContext))]
-    partial class CryptoContextModelSnapshot : ModelSnapshot
+    [Migration("20200303075147_PairHistoricalData")]
+    partial class PairHistoricalData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,9 +81,6 @@ namespace CryptoRates.Migrations
                         .HasColumnType("float");
 
                     b.Property<int>("SecondCurrencyCurrencyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("State")
                         .HasColumnType("int");
 
                     b.Property<double>("TargetPrice")

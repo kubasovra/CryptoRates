@@ -18,6 +18,8 @@ namespace CryptoRates.Data.DTO
         public string UserId { get; private set; }
         public CurrencyDTO FirstCurrency { get; set; }
         public CurrencyDTO SecondCurrency { get; set; }
+        public PairStates State { get; set; }
+        public List<double> HistoricalData { get; set; }
         public double PriceFirstToSecond { get; set; }
         public double PreviousPriceFirstToSecond { get; set; }
         public double TargetPrice { get; set; }
