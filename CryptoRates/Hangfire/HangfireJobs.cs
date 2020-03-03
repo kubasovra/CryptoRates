@@ -17,7 +17,7 @@ namespace CryptoRates.Hangfire
 {
     public class HangfireJobs
     {
-        private const string c_apiKey = @"&api_key=dc1e5dc77434fb29d0bed5f39defab436aed74a01b6491479842826a12433a55";
+        private readonly string _apiKey;
         private readonly CryptoContext _context;
         private readonly ILogger<HangfireJobs> _logger;
         private readonly ILogger<EmailSender> _emailLogger;
@@ -33,6 +33,7 @@ namespace CryptoRates.Hangfire
             _logger = logger;
             _emailLogger = emailLogger;
             _configuration = configuration;
+            _apiKey = @"&api_key=" + configuration.GetSection("Cryptocompare.com")["ApiKey"];
         }
         //Updates the coin list, adding those who are not there yet
         public async Task GetAllCoins()
@@ -82,7 +83,7 @@ namespace CryptoRates.Hangfire
                 for (int i = 0; i < fsymsArray.Count; i += 300)
                 {
                     fsymsParam += string.Join(',', fsymsArray.Skip(i).Take(300));
-                    string request = baseUrl + fsymsParam + tsymsParam + c_apiKey;
+                    string request = baseUrl + fsymsParam + tsymsParam + _apiKey;
                     jsonResponse = await SendRequest(request);
                     fsymsParam = @"?fsyms=";
                     Dictionary<string, CurrencyValueUSD> currenciesPrices = JsonSerializer.Deserialize<Dictionary<string, CurrencyValueUSD>>(jsonResponse);
