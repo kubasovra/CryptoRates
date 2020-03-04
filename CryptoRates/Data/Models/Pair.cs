@@ -41,14 +41,6 @@ namespace CryptoRates.Data
 
         public double TargetPrice { get; set; } = 0;
 
-        public double TargetPriceAbsoluteChange { get; set; } = 0;
-
-        public double TargetPricePercentChange { get; set; } = 0;
-
         public bool IsNotifyOnPrice { get; set; } = false;
-
-        public bool IsNotifyOnAbsoluteChange { get; set; } = false;
-
-        public bool IsNotifyOnPercentChange { get; set; } = false;
     }
 }

@@ -145,11 +145,7 @@ namespace CryptoRates.Controllers
                 PriceFirstToSecond = pair.PriceFirstToSecond,
                 PreviousPriceFirstToSecond = pair.PreviousPriceFirstToSecond,
                 TargetPrice = pair.TargetPrice,
-                TargetPriceAbsoluteChange = pair.TargetPriceAbsoluteChange,
-                TargetPricePercentChange = pair.TargetPricePercentChange,
-                IsNotifyOnPrice = pair.IsNotifyOnPrice,
-                IsNotifyOnAbsoluteChange = pair.IsNotifyOnAbsoluteChange,
-                IsNotifyOnPercentChange = pair.IsNotifyOnPercentChange
+                IsNotifyOnPrice = pair.IsNotifyOnPrice
             };
         }
 
@@ -165,11 +161,7 @@ namespace CryptoRates.Controllers
                 PriceFirstToSecond = pairDTO.PriceFirstToSecond,
                 PreviousPriceFirstToSecond = pairDTO.PreviousPriceFirstToSecond,
                 TargetPrice = pairDTO.TargetPrice,
-                TargetPriceAbsoluteChange = pairDTO.TargetPriceAbsoluteChange,
-                TargetPricePercentChange = pairDTO.TargetPricePercentChange,
-                IsNotifyOnPrice = pairDTO.IsNotifyOnPrice,
-                IsNotifyOnAbsoluteChange = pairDTO.IsNotifyOnAbsoluteChange,
-                IsNotifyOnPercentChange = pairDTO.IsNotifyOnPercentChange
+                IsNotifyOnPrice = pairDTO.IsNotifyOnPrice
             };
         }
     }

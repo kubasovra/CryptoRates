@@ -9,9 +9,5 @@ export class Pair {
   priceFirstToSecond: number;
   previousPriceFirstToSecond: number;
   targetPrice: number;
-  targetPriceAbsoluteChange: number;
-  targetPricePercentChange: number;
   isNotifyOnPrice: boolean;
-  isNotifyOnAbsoluteChange: boolean;
-  isNotifyOnPercentChange: boolean;
 }

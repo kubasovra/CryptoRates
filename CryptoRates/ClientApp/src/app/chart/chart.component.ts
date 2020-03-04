@@ -23,7 +23,6 @@ export class ChartComponent implements OnInit {
     });
     let chart = new CanvasJS.Chart(this.chartId, {
       zoomEnabled: true,
-      animationEnabled: true,
       axisX: {
         gridThickness: 0,
         tickLength: 0,
