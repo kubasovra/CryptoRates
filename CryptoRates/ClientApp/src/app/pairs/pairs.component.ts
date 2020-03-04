@@ -64,4 +64,5 @@ export class PairsComponent implements OnInit {
   notify(title: string, text: string) {
     new Notification(title, { body: text });
   }
+
 }

@@ -7,16 +7,23 @@ import * as CanvasJS from './canvasjs.min';
   styleUrls: ['./chart.component.css']
 })
 export class ChartComponent implements OnInit {
+  @Input('chartId') chartId: string;
   @Input('prices') data: number[];
 
   constructor() { }
   
   ngOnInit() {
-    let chart = new CanvasJS.Chart("chartContainer", {
+
+  }
+
+  ngAfterViewInit() {
+    let chartData = [];
+    this.data.forEach(c => {
+      chartData.push({ y: c });
+    });
+    let chart = new CanvasJS.Chart(this.chartId, {
       zoomEnabled: true,
       animationEnabled: true,
-      width: 200,
-      height: 50,
       axisX: {
         gridThickness: 0,
         tickLength: 0,
@@ -26,6 +33,8 @@ export class ChartComponent implements OnInit {
         }
       },
       axisY: {
+        minimum: Math.min.apply(null, this.data),
+        maximum: Math.max.apply(null, this.data),
         gridThickness: 0,
         tickLength: 0,
         lineThickness: 0,
@@ -36,10 +45,9 @@ export class ChartComponent implements OnInit {
       data: [
         {
           type: "line",
-          dataPoints: this.data
+          dataPoints: chartData
         }]
     });
-
     chart.render();
   }
 }
