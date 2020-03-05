@@ -42,6 +42,16 @@ export class PairsComponent implements OnInit {
   updatePairs() {
     this.pairsService.getAllPairs().subscribe(result => {
       this.pairs = result;
+      this.pairs.forEach(p => {
+        let price = p.priceFirstToSecond;
+        let firstSignificantDigit: number = price ? -Math.floor(Math.log(Math.abs(price)) / Math.LN10 + .01) : 1;
+        if (firstSignificantDigit >= 0) {
+          p.priceFirstToSecond = Number(price.toFixed(firstSignificantDigit + 2));
+        }
+        else {
+          p.priceFirstToSecond = Number(price.toFixed(2));
+        }
+      });
     }, error => console.error(error));
   }
 
