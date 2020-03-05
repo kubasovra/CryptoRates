@@ -21,60 +21,64 @@ export class AddEditPairComponent implements OnInit {
   firstFilteredCurrencies: Observable<Currency[]>;
   secondFilteredCurrencies: Observable<Currency[]>;
   baseUrl: string;
+  currencyNamesAreSame: boolean;
 
 
   constructor(private currenciesService: CurrenciesService, private pairsService: PairsService) { }
 
   ngOnInit() {
-
-
     this.currenciesService.getAllCurrencies().subscribe(result => {
       this.allCurrencies = result;
 
-      this.firstCurrencyControl = new FormControl('', [Validators.required, this.fullNameValidator(this.allCurrencies)]);
-      this.secondCurrencyControl = new FormControl('', [Validators.required, this.fullNameValidator(this.allCurrencies)]);
+      this.firstCurrencyControl = new FormControl('', [Validators.required, this.nameValidator(this.allCurrencies)]);
+      this.secondCurrencyControl = new FormControl('', [Validators.required, this.nameValidator(this.allCurrencies)]);
 
       this.firstFilteredCurrencies = this.firstCurrencyControl.valueChanges
         .pipe(
           startWith(''),
           map(value => typeof value === 'string' ? value : value.name),
-          map(name => name ? this._filter(name) : this.allCurrencies.slice())
+          map(name => name ? this.filter(name) : this.allCurrencies.slice())
       );
 
       this.secondFilteredCurrencies = this.secondCurrencyControl.valueChanges
         .pipe(
           startWith(''),
           map(value => typeof value === 'string' ? value : value.name),
-          map(name => name ? this._filter(name) : this.allCurrencies.slice())
+          map(name => name ? this.filter(name) : this.allCurrencies.slice())
         );
     }, error => console.error(error));
-
-
   }
 
-  private _filter(name: string): Currency[] {
+  private filter(name: string): Currency[] {
+    this.currencyNamesAreSame = false;
     const filterValue = name.toLowerCase();
 
-    return this.allCurrencies.filter(currency => currency.name.toLowerCase().indexOf(filterValue) === 0);
+    return this.allCurrencies.filter(currency => currency.name.toLowerCase().indexOf(filterValue) === 0 || currency.symbol.toLowerCase().indexOf(filterValue) === 0);
   }
 
   private onClickAddPair(firstCurrencyName: string, secondCurrencyName: string, targetPrice: number) {
     let pair: Pair = new Pair();
-    pair.firstCurrency = new Currency();
-    pair.secondCurrency = new Currency();
-    pair.firstCurrency.name = firstCurrencyName;
-    pair.secondCurrency.name = secondCurrencyName;
+    pair.firstCurrency = this.allCurrencies.find(c => c.name.toLowerCase() === firstCurrencyName.toLowerCase() || c.symbol.toLowerCase() === firstCurrencyName.toLowerCase());
+    pair.secondCurrency = this.allCurrencies.find(c => c.name.toLowerCase() === secondCurrencyName.toLowerCase() || c.symbol.toLowerCase() === secondCurrencyName.toLowerCase());
+
+    if (pair.firstCurrency === pair.secondCurrency) {
+      this.currencyNamesAreSame = true;
+      return;
+    }
+
     pair.targetPrice = Number(targetPrice);
     if (pair.targetPrice != 0) {
       pair.isNotifyOnPrice = true;
     }
 
-    this.pairsService.addPair(pair).subscribe((event) => this.pairAdded.emit(event));
+    if (pair.firstCurrency !== undefined && pair.secondCurrency !== undefined) {
+      this.pairsService.addPair(pair).subscribe((event) => this.pairAdded.emit(event));
+    }
   }
 
-  private fullNameValidator(allCurrencies: Currency[]): ValidatorFn {
+  private nameValidator(allCurrencies: Currency[]): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      const found = allCurrencies.findIndex(curr => curr.name === control.value);
+      const found = allCurrencies.findIndex(curr => curr.name.toLowerCase() === control.value.toLowerCase() || curr.symbol.toLowerCase() === control.value.toLowerCase());
       return found === -1 ? { 'currencyControl': { value: control.value } } : null;
     }
   }

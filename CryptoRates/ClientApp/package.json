@@ -26,6 +26,8 @@
     "@angular/router": "8.2.12",
     "@angular/service-worker": "8.2.12",
     "@nguniversal/module-map-ngfactory-loader": "8.1.1",
+    "@types/gapi": "0.0.39",
+    "@types/gapi.auth2": "0.0.51",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.4.1",
     "core-js": "^3.6.4",

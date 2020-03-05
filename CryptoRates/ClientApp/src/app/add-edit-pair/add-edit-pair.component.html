@@ -4,7 +4,7 @@
     <input #firstCurrencyName type="text" matInput [formControl]="firstCurrencyControl" [matAutocomplete]="autoCompleteFirst">
     <mat-autocomplete #autoCompleteFirst="matAutocomplete" [displayWith]="displayFn">
       <mat-option *ngFor="let currency of firstFilteredCurrencies | async" [value]="currency.name">
-        <img [src]="currency.imageURL" width="20" height="20" />|{{currency.name}} ({{currency.symbol}})
+        <img [src]="currency.imageURL" width="20" height="20" /> {{currency.name}} ({{currency.symbol}})
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
@@ -14,7 +14,7 @@
     <input #secondCurrencyName type="text" matInput [formControl]="secondCurrencyControl" [matAutocomplete]="autoCompleteSecond">
     <mat-autocomplete #autoCompleteSecond="matAutocomplete" [displayWith]="displayFn">
       <mat-option *ngFor="let currency of secondFilteredCurrencies | async" [value]="currency.name">
-        <img [src]="currency.imageURL" width="20" height="20" />|{{currency.name}} ({{currency.symbol}})
+        <img [src]="currency.imageURL" width="20" height="20" /> {{currency.name}} ({{currency.symbol}})
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
@@ -28,11 +28,16 @@
 
   <div class="alert alert-danger"
        *ngIf="firstCurrencyControl.invalid && firstCurrencyControl.touched">
-    You must write a full name of the first currency, or just choose from the dropdown
+    Invalid first currency name
   </div>
 
   <div class="alert alert-danger"
        *ngIf="secondCurrencyControl.invalid && secondCurrencyControl.touched">
-    You must write a full name of the second currency, or just choose from the dropdown
+    Invalid second currency name
+  </div>
+
+  <div class="alert alert-danger"
+       *ngIf="currencyNamesAreSame">
+    Currency names can't be same
   </div>
 </form>

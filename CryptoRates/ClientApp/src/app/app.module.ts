@@ -45,6 +45,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { ChartComponent } from './chart/chart.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ChartComponent } from './chart/chart.component';
     NavMenuComponent,
     PairsComponent,
     AddEditPairComponent,
-    ChartComponent
+    ChartComponent,
+    HomeComponent
   ],
   imports: [
     MatCheckboxModule,
@@ -92,6 +94,7 @@ import { ChartComponent } from './chart/chart.component';
     FormsModule,
     ApiAuthorizationModule,
     RouterModule.forRoot([
+      { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'pairs', component: PairsComponent, canActivate: [AuthorizeGuard] },
       { path: 'add-edit-pair', component: AddEditPairComponent, canActivate: [AuthorizeGuard] }
     ]),

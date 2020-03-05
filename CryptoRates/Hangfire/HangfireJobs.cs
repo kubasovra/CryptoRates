@@ -39,7 +39,7 @@ namespace CryptoRates.Hangfire
         public async Task GetAllCoins()
         {
             string baseImageAndLinkUrl = "https://www.cryptocompare.com";
-            string jsonResponse = await SendRequest(@"https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym=USD");
+            string jsonResponse = await SendRequest(@"https://min-api.cryptocompare.com/data/top/mktcapfull?limit=100&tsym=USD" + _apiKey);
             CurrenciesToplist topList = JsonSerializer.Deserialize<CurrenciesToplist>(jsonResponse);
             foreach (Datum datum in topList.Data)
             {
@@ -204,7 +204,7 @@ namespace CryptoRates.Hangfire
 
         private async Task<List<string>> GetPastDayPriceData(Currency firstCurrency, Currency secondCurrency)
         {
-            string request = string.Format(@"https://min-api.cryptocompare.com/data/v2/histominute?fsym={0}&tsym={1}&limit=1440", firstCurrency.Symbol, secondCurrency.Symbol);
+            string request = string.Format(@"https://min-api.cryptocompare.com/data/v2/histominute?fsym={0}&tsym={1}&limit=1440" + _apiKey, firstCurrency.Symbol, secondCurrency.Symbol);
             string jsonResponse = await SendRequest(request);
             PairHistoricalData historicalData = JsonSerializer.Deserialize<PairHistoricalData>(jsonResponse);
 

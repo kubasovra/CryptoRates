@@ -88,6 +88,10 @@ namespace CryptoRates.Controllers
         [HttpPost]
         public async Task<ActionResult<PairDTO>> PostPair(PairDTO pairDTO)
         {
+            if (pairDTO.FirstCurrency.Name == pairDTO.SecondCurrency.Name)
+            {
+                return NoContent();
+            }
             var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             ApplicationUser currentUser = await _userManager.FindByIdAsync(id);
             Pair newPair = PairFromDTO(pairDTO, currentUser, _context);
