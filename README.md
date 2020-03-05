@@ -1,4 +1,12 @@
-# CryptoRates
+# Getting started
+
+First, you need to manually create an empty local database called "HangfireDB". Hangfire will use it automatically
+
+Starting up the app:
+<ul>
+  <li>In <strong>ClientApp</strong> directory, run <strong>npm start</strong> and wait for it to show "compiled successfully"</li>
+  <li>Launch it via <strong>Visual Studio</strong>, because if you just build it (successfully) and run an .exe, it will fail </li>
+</ul>
 
 <h2>How to enable Google authentication:</h2>
 
