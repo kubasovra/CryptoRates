@@ -158,7 +158,7 @@ namespace CryptoRates.Hangfire
             {
                 if (pair.IsNotifyOnPrice)
                 {
-                    if ((pair.PreviousPriceFirstToSecond > pair.TargetPrice && pair.TargetPrice > pair.PriceFirstToSecond) || (pair.PreviousPriceFirstToSecond < pair.TargetPrice && pair.TargetPrice < pair.PriceFirstToSecond))
+                    if ((pair.PreviousPriceFirstToSecond > pair.TargetPrice && pair.TargetPrice > pair.PriceFirstToSecond) || (pair.PreviousPriceFirstToSecond < pair.TargetPrice && pair.TargetPrice < pair.PriceFirstToSecond) && pair.State != PairStates.Pending)
                     {
                         _logger.LogInformation("Oink");
                         pair.State = PairStates.Pending;
@@ -204,6 +204,10 @@ namespace CryptoRates.Hangfire
 
         private async Task<List<string>> GetPastDayPriceData(Currency firstCurrency, Currency secondCurrency)
         {
+            if (firstCurrency == secondCurrency)
+            {
+                return new List<string>() { "1" };
+            }
             string request = string.Format(@"https://min-api.cryptocompare.com/data/v2/histominute?fsym={0}&tsym={1}&limit=1440" + _apiKey, firstCurrency.Symbol, secondCurrency.Symbol);
             string jsonResponse = await SendRequest(request);
             PairHistoricalData historicalData = JsonSerializer.Deserialize<PairHistoricalData>(jsonResponse);

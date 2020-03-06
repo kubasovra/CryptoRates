@@ -10,12 +10,15 @@
     <li>Track price of pairs of cryptocurrencies</li>
     <li>Notify you (and send an email) when the price achieves the value set by YOU</li>
     <li>Show you some awesome LINE CHARTS</li>
-    <li>List item #4</li>
   </ul>
 
-  <h2>Lets get started!</h2>
-  <p>Basically, all the funtionality is on "Pairs" page, but first - you have to <button class="btn btn-outline-primary" [routerLink]='["/authentication/login"]'>Sign in</button></p>
+  <div *ngIf="isUserAuthenticated | async; else toSignInSection">
+    <button class="btn btn-outline-primary" [routerLink]='["/pairs"]'>Continue to pairs</button>
+  </div>
 
-  
+  <ng-template #toSignInSection>
+    <h2>Lets get started!</h2>
+    <p>Basically, all the funtionality is on "Pairs" page, but first - you have to <button class="btn btn-outline-primary" [routerLink]='["/authentication/login"]'>Sign in</button></p>
+  </ng-template>
 </body>
 </html>
