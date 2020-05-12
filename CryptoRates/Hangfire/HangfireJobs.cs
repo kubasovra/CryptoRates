@@ -20,18 +20,16 @@ namespace CryptoRates.Hangfire
         private readonly string _apiKey;
         private readonly CryptoContext _context;
         private readonly ILogger<HangfireJobs> _logger;
-        private readonly ILogger<EmailSender> _emailLogger;
         private readonly IConfiguration _configuration;
 
         //The historical data is minute wise, whereas current price updates every 10 seconds. This counter is used to sync 
         //them - historical updates every sixth getting current price
         private int HistoricalDataCounter = 0;
 
-        public HangfireJobs(CryptoContext context, ILogger<HangfireJobs> logger, ILogger<EmailSender> emailLogger, IConfiguration configuration)
+        public HangfireJobs(CryptoContext context, ILogger<HangfireJobs> logger, IConfiguration configuration)
         {
             _context = context;
             _logger = logger;
-            _emailLogger = emailLogger;
             _configuration = configuration;
             _apiKey = @"&api_key=" + configuration.GetSection("Cryptocompare.com")["ApiKey"];
         }
@@ -117,7 +115,7 @@ namespace CryptoRates.Hangfire
 
             foreach(Pair pair in allPairs.Where(p => p.State == PairStates.Pending))
             {
-                EmailSender emailSender = new EmailSender(_emailLogger, _configuration);
+                EmailSender emailSender = new EmailSender(_configuration);
 
                 bool emailResult = false;
                 try
@@ -128,14 +126,14 @@ namespace CryptoRates.Hangfire
                         string.Format("{0}/{1} price is now {2}, last known price was {3}", pair.FirstCurrency.Symbol, pair.SecondCurrency.Symbol, pair.PriceFirstToSecond, pair.PreviousPriceFirstToSecond)
                         );
                 }
-                catch
+                catch (Exception e)
                 {
-                    throw;
+                    _logger.LogError(e.Message);
                 }
                 finally
                 {
                     //If it is the last attempt => mark pair as failed
-                    if (hangfireContext.GetJobParameter<int>("RetryCount") == 10)
+                    if (hangfireContext.GetJobParameter<int>("RetryCount") >= 10)
                     {
                         pair.State = PairStates.Failed;
                     }

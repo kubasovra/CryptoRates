@@ -11,11 +11,9 @@ namespace CryptoRates.Hangfire
 {
     public class EmailSender
     {
-        private readonly ILogger<EmailSender> _logger;
         private readonly IConfiguration _configuration;
-        public EmailSender(ILogger<EmailSender> logger, IConfiguration configuration)
+        public EmailSender(IConfiguration configuration)
         {
-            _logger = logger;
             _configuration = configuration;
         }
         public async Task<bool> SendEmail(string destinationEmail, string messageSubject, string messageBody)
@@ -37,15 +35,8 @@ namespace CryptoRates.Hangfire
             message.Subject = messageSubject;
             message.SubjectEncoding = System.Text.Encoding.UTF8;
 
-            try
-            {
-                await client.SendMailAsync(message);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                throw;
-            }
+            await client.SendMailAsync(message);
+
             return true;
         }
     }

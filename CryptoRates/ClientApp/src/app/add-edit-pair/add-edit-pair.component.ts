@@ -60,7 +60,7 @@ export class AddEditPairComponent implements OnInit {
     let pair: Pair = new Pair();
     pair.firstCurrency = this.allCurrencies.find(c => c.name.toLowerCase() === firstCurrencyName.toLowerCase() || c.symbol.toLowerCase() === firstCurrencyName.toLowerCase());
     pair.secondCurrency = this.allCurrencies.find(c => c.name.toLowerCase() === secondCurrencyName.toLowerCase() || c.symbol.toLowerCase() === secondCurrencyName.toLowerCase());
-
+    
     if (pair.firstCurrency === pair.secondCurrency) {
       this.currencyNamesAreSame = true;
       return;
