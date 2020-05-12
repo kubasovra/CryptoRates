@@ -1,9 +1,30 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html'
+import { AuthenticationService } from './core/services/authentication.service';
+import { User } from './core/models/user';
+import { Role } from './core/models/role';
+
+@Component({ 
+    selector: 'app',       
+    templateUrl: 'app.component.html' 
 })
 export class AppComponent {
-  title = 'app';
+    currentUser: User;
+
+    constructor(
+        private router: Router,
+        private authenticationService: AuthenticationService
+    ) {
+        this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    }
+
+    get isAdmin() {
+        return this.currentUser && this.currentUser.role === Role.Admin;
+    }
+
+    logout() {
+        this.authenticationService.logout();
+        this.router.navigate(['/login']);
+    }
 }

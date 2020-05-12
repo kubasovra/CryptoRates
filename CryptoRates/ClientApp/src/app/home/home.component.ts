@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthorizeService } from '../../api-authorization/authorize.service';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -10,11 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
 
-  isUserAuthenticated: Observable<boolean>;
 
-  constructor(private authorizeService: AuthorizeService) { }
+  constructor() { }
 
-  ngOnInit() {
-    this.isUserAuthenticated = this.authorizeService.isAuthenticated();
-  }
+  ngOnInit() {}
 }

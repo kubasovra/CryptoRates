@@ -1,18 +1,31 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
-@Component({
-  selector: 'app-nav-menu',
-  templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.css']
+import { AuthenticationService } from '../core/services/authentication.service';
+import { User } from '../core/models/user';
+import { Role } from '../core/models/role';
+
+@Component({ 
+    selector: 'nav-menu', 
+    templateUrl: 'nav-menu.component.html' 
 })
+
 export class NavMenuComponent {
-  isExpanded = false;
+    currentUser: User;
 
-  collapse() {
-    this.isExpanded = false;
-  }
+    constructor(
+        private router: Router,
+        private authenticationService: AuthenticationService
+    ) {
+        this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    }
 
-  toggle() {
-    this.isExpanded = !this.isExpanded;
-  }
+    get isAdmin() {
+        return this.currentUser && this.currentUser.role === Role.Admin;
+    }
+
+    logout() {
+        this.authenticationService.logout();
+        this.router.navigate(['/login']);
+    }
 }
