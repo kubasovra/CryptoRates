@@ -14,11 +14,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CryptoRates.Data
 {
-    public class CryptoContext : ApiAuthorizationDbContext<ApplicationUser>
+    public class CryptoContext : DbContext
     {
-        public CryptoContext(
-            DbContextOptions options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+        public CryptoContext(DbContextOptions<CryptoContext> options) : base(options)
         {
         }
         protected override void OnModelCreating(ModelBuilder builder)
@@ -33,5 +31,7 @@ namespace CryptoRates.Data
 
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Pair> Pairs { get; set; }
+        public DbSet<AppUser> Users { get; set; }
+
     }
 }

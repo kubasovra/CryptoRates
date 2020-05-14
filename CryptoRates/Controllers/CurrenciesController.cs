@@ -49,7 +49,7 @@ namespace CryptoRates.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCurrency(int id, Currency currency)
         {
-            if (id != currency.CurrencyId)
+            if (id != currency.Id)
             {
                 return BadRequest();
             }
@@ -84,7 +84,7 @@ namespace CryptoRates.Controllers
             _context.Currencies.Add(currency);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCurrency", new { id = currency.CurrencyId }, currency);
+            return CreatedAtAction("GetCurrency", new { id = currency.Id }, currency);
         }
 
         // DELETE: api/Currencies/5
@@ -105,13 +105,13 @@ namespace CryptoRates.Controllers
 
         private bool CurrencyExists(int id)
         {
-            return _context.Currencies.Any(e => e.CurrencyId == id);
+            return _context.Currencies.Any(e => e.Id == id);
         }
 
         private static CurrencyDTO CurrencyToDTO(Currency currency)
         {
             return new CurrencyDTO() {
-                CurrencyId = currency.CurrencyId,
+                CurrencyId = currency.Id,
                 Name = currency.Name,
                 Symbol = currency.Symbol,
                 ImageURL = currency.ImageURL,

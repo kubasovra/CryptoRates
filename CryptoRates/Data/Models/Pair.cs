@@ -20,10 +20,10 @@ namespace CryptoRates.Data
     public class Pair
     {
         [Key]
-        public int PairId { get; set; }
+        public int Id { get; set; }
 
         [Required]
-        public ApplicationUser User { get; set; }
+        public AppUser User { get; set; }
 
         [Required]
         public Currency FirstCurrency { get; set; }

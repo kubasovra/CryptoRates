@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { first } from 'rxjs/operators';
 
-import { User } from '../core/models/user';
-import { UserService} from '../core/services/user.service';
-import { AuthenticationService} from '../core/services/authentication.service';
+import { User } from '@app/core/models/user';
+import { UserService} from '@app/core/services/user.service';
+import { AuthenticationService} from '@app/core/services/authentication.service';
 
 @Component({ templateUrl: 'profile.component.html' })
 export class ProfileComponent {

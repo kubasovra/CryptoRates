@@ -24,14 +24,12 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatChipsModule } from '@angular/material/chips';
 import { ChartComponent } from './chart/chart.component';
 import { HomeComponent } from './home/home.component';
-import { AdminComponent } from './admin/admin.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LoginComponent } from './login/login.component';
 import { JwtInterceptor } from './core/helpers/jwt.interceptor';
 import { ErrorInterceptor } from './core/helpers/error.interceptor';
-import { fakeBackendProvider } from './core/helpers/fake-backend';
 import { AuthGuard } from './core/helpers/auth.guard';
-import { Role } from './core/models/role';
+import { SignupComponent } from './signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -41,9 +39,9 @@ import { Role } from './core/models/role';
     AddEditPairComponent,
     ChartComponent,
     HomeComponent,
-    AdminComponent,
     ProfileComponent,
-    LoginComponent
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     MatButtonModule,
@@ -65,18 +63,16 @@ import { Role } from './core/models/role';
       { path: '', component: HomeComponent},
       { path: 'pairs', component: PairsComponent, canActivate: [AuthGuard] },
       { path: 'add-edit-pair', component: AddEditPairComponent, canActivate: [AuthGuard] },
-      { path: 'profile', component: AdminComponent, canActivate: [AuthGuard]},
+      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
       { path: 'login', component: LoginComponent },
+      { path: 'signup', component: SignupComponent },
       { path: '**', redirectTo: '' }
     ]),
     BrowserAnimationsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
-    // provider used to create fake backend
-    fakeBackendProvider
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

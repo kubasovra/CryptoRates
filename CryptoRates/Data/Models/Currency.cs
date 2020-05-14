@@ -9,7 +9,7 @@ namespace CryptoRates.Data
     public class Currency
     {
         [Key]
-        public int CurrencyId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }

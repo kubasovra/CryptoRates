@@ -18,22 +18,24 @@ namespace CryptoRates.Controllers
     public class PairsController : ControllerBase
     {
         private readonly CryptoContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PairsController(CryptoContext context, UserManager<ApplicationUser> userManager)
+        public PairsController(CryptoContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         // GET: api/Pairs
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PairDTO>>> GetPairs()
         {
+            //FIX USER
+            /*
             var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             ApplicationUser currentUser = await _userManager.FindByIdAsync(id);
             List<PairDTO> pairDTOs = await _context.Pairs.Where(p => p.User == currentUser).Include(p => p.User).Include(p => p.FirstCurrency).Include(p => p.SecondCurrency).Select(p => PairToDTO(p)).ToListAsync();
             return pairDTOs;
+            */
+            return null;
         }
 
         // GET: api/Pairs/5
@@ -56,7 +58,7 @@ namespace CryptoRates.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPair(int id, Pair pair)
         {
-            if (id != pair.PairId)
+            if (id != pair.Id)
             {
                 return BadRequest();
             }
@@ -88,11 +90,14 @@ namespace CryptoRates.Controllers
         [HttpPost]
         public async Task<ActionResult<PairDTO>> PostPair(PairDTO pairDTO)
         {
+            //FIX USER
+            /*
             if (pairDTO.FirstCurrency.Name == pairDTO.SecondCurrency.Name)
             {
                 return NoContent();
             }
             var id = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             ApplicationUser currentUser = await _userManager.FindByIdAsync(id);
             Pair newPair = PairFromDTO(pairDTO, currentUser, _context);
             _context.Pairs.Add(newPair);
@@ -101,6 +106,8 @@ namespace CryptoRates.Controllers
             //PairFromDTO fills a pair with all needed data, such as links, and here we get it back
             pairDTO = PairToDTO(newPair);
             return pairDTO;
+            */
+            return null;
         }
 
         // DELETE: api/Pairs/5
@@ -121,15 +128,15 @@ namespace CryptoRates.Controllers
 
         private bool PairExists(int id)
         {
-            return _context.Pairs.Any(e => e.PairId == id);
+            return _context.Pairs.Any(e => e.Id == id);
         }
 
         private static PairDTO PairToDTO(Pair pair)
         {
-            return new PairDTO(pair.PairId, pair.User.Id)
+            return new PairDTO(pair.Id, pair.User.Id.ToString())
             {
                 FirstCurrency = new CurrencyDTO() {
-                    CurrencyId = pair.FirstCurrency.CurrencyId,
+                    CurrencyId = pair.FirstCurrency.Id,
                     Name = pair.FirstCurrency.Name,
                     Symbol = pair.FirstCurrency.Symbol,
                     ValueUSD = pair.FirstCurrency.ValueUSD,
@@ -137,7 +144,7 @@ namespace CryptoRates.Controllers
                     ImageURL = pair.FirstCurrency.ImageURL
                 },
                 SecondCurrency = new CurrencyDTO() {
-                    CurrencyId = pair.SecondCurrency.CurrencyId,
+                    CurrencyId = pair.SecondCurrency.Id,
                     Name = pair.SecondCurrency.Name,
                     Symbol = pair.SecondCurrency.Symbol,
                     ValueUSD = pair.SecondCurrency.ValueUSD,
@@ -153,11 +160,11 @@ namespace CryptoRates.Controllers
             };
         }
 
-        private static Pair PairFromDTO(PairDTO pairDTO, ApplicationUser currentUser, CryptoContext context )
+        private static Pair PairFromDTO(PairDTO pairDTO, AppUser user, CryptoContext context )
         {
             return new Pair()
             {
-                User = currentUser,
+                User = user,
                 FirstCurrency = context.Currencies.FirstOrDefault(c => c.Name.ToLower() == pairDTO.FirstCurrency.Name.ToLower()),
                 SecondCurrency = context.Currencies.FirstOrDefault(c => c.Name.ToLower() == pairDTO.SecondCurrency.Name.ToLower()),
                 State = pairDTO.State,

@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthenticationService } from '../core/services/authentication.service';
-import { User } from '../core/models/user';
-import { Role } from '../core/models/role';
+import { AuthenticationService } from '@app/core/services/authentication.service';
+import { User } from '@app/core/models/user';
 
 @Component({ 
     selector: 'nav-menu', 
@@ -20,8 +19,8 @@ export class NavMenuComponent {
         this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
     }
 
-    get isAdmin() {
-        return this.currentUser && this.currentUser.role === Role.Admin;
+    get isLoggedIn() {
+        return this.authenticationService.isUserLoggedIn;
     }
 
     logout() {
