@@ -5,7 +5,7 @@ First, you need to manually create an empty local database called "HangfireDB". 
 Starting up the app:
 <ul>
   <li>In <strong>ClientApp</strong> directory, run <strong>npm start</strong> and wait for it to show "compiled successfully"</li>
-  <li>Launch it via <strong>Visual Studio</strong>, because if you just build it (successfully) and run an .exe, it will fail </li>
+  <li>Launch it via <strong>Visual Studio</strong>, because if you just build it (successfully) and run an .exe, it will fail. Or it won't, you may try</li>
 </ul>
 
 <h2>How to enable Google authentication:</h2>
